@@ -25,6 +25,17 @@ void Object::rotate(GLfloat t,GLfloat pX, GLfloat pY){
 	glTranslated(-pX,-pY,0);	
 }
 
+void Object::orbit(GLfloat px,GLfloat py, GLfloat radius, GLfloat& angle,GLfloat torque){
+
+	//this->x = px + radius*cos(angle*3.14159265/180);
+//	this->y = py + radius*sin(angle*3.14159265/180);
+//	
+	if(angle<360){
+		angle+=torque; //Rotational movements.
+	}else
+		angle = 0.0;
+}
+
 void Object::drawPoint(GLfloat x, GLfloat y, GLfloat size){
 	glPushMatrix();
 	glPointSize(size);
@@ -61,7 +72,9 @@ void Object::drawCircle(GLfloat radius, GLfloat px, GLfloat py,GLfloat thickness
 
 //Draw Filled circle
 void Object::drawSolidCircle(GLfloat r,GLfloat px, GLfloat py,GLfloat thickness){
-	glLineWidth(thickness);
+	
+
+	//glLineWidth(thickness);
 	glPushMatrix();
 	glBegin(GL_TRIANGLE_FAN);
     for (int i = 0; i < 360; i++) {
@@ -213,6 +226,39 @@ void Object::drawSector(GLfloat radius, GLfloat cx,GLfloat cy, GLfloat startAngl
     
     
 
+}
+
+//drawCircleProgress(_WIDTH/2,_HEIGHT/2,135,ii); //23.85f is full speed  , 100 is start
+void Object::drawCircleProgress(GLfloat cx, GLfloat cy,GLfloat r, float progress) {
+    // Define the circle's center point, radius, and line thickness
+    //float cx = _WIDTH/2-280, cy =_HEIGHT/2, r = 134;
+	float t = 0.1f;
+    
+    // Draw the circle's outline
+    glLineWidth(t);
+    glColor3f(1,1,1);
+    glBegin(GL_TRIANGLE_FAN);
+    for (int i = 0; i <= 360; i++) {
+        float angle = i * M_PI / 180.0f;
+        float x = cx + r * cos(angle);
+        float y = cy + r * sin(angle);
+        glVertex2f(x, y);
+    }
+    glEnd();
+    
+    // Draw the progress arc
+    float startAngle = 230.0f; // start at the top  //315
+    float endAngle = startAngle + 360 * progress / 100.0f;
+    glColor3f(1.0f, 0.0f, 0.0f); // red
+    glBegin(GL_TRIANGLE_FAN);
+    glVertex2f(cx, cy);
+    for (int i = startAngle; i <= endAngle; i++) {
+        float angle = i * M_PI / 180.0f;
+        float x = cx + r * cos(angle);
+        float y = cy + r * sin(angle);
+        glVertex2f(x, y);
+    }
+    glEnd();
 }
 
 
