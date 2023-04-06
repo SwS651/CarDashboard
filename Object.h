@@ -18,16 +18,19 @@ public:
 	void drawLine(GLfloat x1, GLfloat y1, GLfloat x2, GLfloat y2, GLfloat thickness);
     void drawCircle(GLfloat radius, GLfloat px, GLfloat py,GLfloat thickness);
     void drawEllipse(GLfloat pX, GLfloat pY, GLfloat radiusW, GLfloat radiusH); 
-    
-    void drawSolidCircle(GLfloat r,GLfloat px, GLfloat py,GLfloat thickness);
-    void drawRingedCircle(GLfloat radius,GLfloat cx,GLfloat cy, GLfloat thickness, GLfloat progress, GLfloat emptyRadius);
     void drawRect(GLfloat x,GLfloat y, GLfloat width, GLfloat height);
     void drawTriangle(GLfloat cx,GLfloat cy,GLfloat size);
     void drawRightTriangle(GLfloat cx, GLfloat cy, GLfloat size);
+    void drawSolidCircle(GLfloat r,GLfloat px, GLfloat py,GLfloat thickness);
+    
+    
+    void drawRingedCircle(GLfloat radius,GLfloat cx,GLfloat cy, GLfloat thickness, GLfloat progress, GLfloat emptyRadius);
+	void drawCircleProgress(GLfloat cx, GLfloat cy,GLfloat r, float progress);
     void drawSector(GLfloat radius, GLfloat cx,GLfloat cy, GLfloat startAngle, GLfloat sweepAngle);
     
     //Rotate the object by a certain angle around a given point.
 	void rotate(GLfloat t,GLfloat pX, GLfloat pY);
+	void orbit(GLfloat px,GLfloat py, GLfloat radius, GLfloat& angle,GLfloat torque);
     
     // Set the colors of the border, filled, and unfilled areas of the object.
     void setBorderColor( GLfloat borderR,GLfloat borderG,GLfloat borderB);
@@ -38,7 +41,7 @@ protected:
 	GLfloat borderR,borderG,borderB;
 	GLfloat filledR,filledG,filledB;
 	GLfloat unfilledR, unfilledG, unfilledB;
-
+    GLfloat xVel,yVel;
     
 };
 

@@ -21,6 +21,16 @@ GLfloat BG_R = 0.0118f;
 GLfloat BG_G = 0.098f; 
 GLfloat BG_B = 0.2f;
 
+GLfloat angle = 0.0f;
+
+GLfloat rotateAngle = 0;  //start from 158 degree
+GLfloat pointerAng = 359;//138;
+GLfloat ii = 100;
+bool pFlag = true;
+
+GLfloat px = (_WIDTH/2)-280;
+GLfloat py = _HEIGHT/2;
+
 void drawText(const char *text, GLint length, GLint x, GLint y, void *font,GLfloat size){
 	glMatrixMode(GL_PROJECTION);
 	double *matrix = new double[16];
@@ -63,13 +73,55 @@ void da2hboard(){
 	delete signals;
 	delete dashboard;
 }
+void orbit(GLfloat cx,GLfloat cy, GLfloat radius, GLfloat& angle,GLfloat torque,GLfloat& px,GLfloat& py){
 
+	px = cx - radius*cos(angle*3.14159265/180);
+	py = cy - radius*sin(angle*3.14159265/180);
+	
+	if(angle<360){
+		angle+=torque; //Rotational movements.
+	}else
+		angle = 0.0;
+}
+
+
+void ppp(GLfloat x, GLfloat y,GLint size){
+	glPushMatrix();
+	glPointSize(size);
+	glBegin(GL_POINTS);
+		glVertex2i(x,y);
+
+	glEnd();
+	glPopMatrix();
+}
+
+void speedoPointer(){
+	if(pFlag){
+		pointerAng+=1;
+
+	}else{
+		pointerAng-=1;
+	}
+}
 void spe2dometer(){
 	Speedometer* speedometer = new Speedometer();
 	speedometer->setBackgroundColor(THEME_R,THEME_G,THEME_B);
 	speedometer->setPosition((_WIDTH/2)-280,_HEIGHT/2);
-	speedometer->draw();
+	speedometer->circlePrgs = pointerAng;
+	speedometer->outerCircle();
+	speedometer->circlePoint();
 	
+	speedometer->pointer();
+	speedometer->coreCircle(); 
+	speedoPointer();
+
+	//Speedometer;  360-90 (0 -> full kmh)
+	if (pointerAng == 90) 
+  		pFlag = true;
+	
+	if (pointerAng >= 359) 
+		pFlag=false;
+
 	delete speedometer;
 }
 void gps(){
@@ -173,7 +225,41 @@ void renderingText(){
     glPopMatrix();
 }
 
+void drawCircleProgress(GLfloat cx, GLfloat cy,GLfloat r, float progress) {
+    // Define the circle's center point, radius, and line thickness
+    //float cx = _WIDTH/2-280, cy =_HEIGHT/2, r = 134;
+	float t = 0.1f;
+    
+    // Draw the circle's outline
+    glLineWidth(t);
+    glColor3f(1,1,1);
+    glBegin(GL_TRIANGLE_FAN);
+    for (int i = 0; i <= 360; i++) {
+        float angle = i * M_PI / 180.0f;
+        float x = cx + r * cos(angle);
+        float y = cy + r * sin(angle);
+        glVertex2f(x, y);
+    }
+    glEnd();
+    
+    // Draw the progress arc
+    float startAngle = 230.0f; // start at the top  //315
+    float endAngle = startAngle + 360 * progress / 100.0f;
+    glColor3f(1.0f, 0.0f, 0.0f); // red
+    glBegin(GL_TRIANGLE_FAN);
+    glVertex2f(cx, cy);
+    for (int i = startAngle; i <= endAngle; i++) {
+        float angle = i * M_PI / 180.0f;
+        float x = cx + r * cos(angle);
+        float y = cy + r * sin(angle);
+        glVertex2f(x, y);
+    }
+    glEnd();
+}
+
+
 void render(){
+
 
 	glClearColor(BG_R,BG_G,BG_B, 1.0f); // Window background
 	// Canvas settings
@@ -191,14 +277,23 @@ void render(){
 	accelerometer();
 	bottomBar();
 	renderingText();
+	
 
 	
+	
+	
+
+
+	
+	
+	glutSwapBuffers(); //Swap foreground and background frames.
+	glutPostRedisplay(); //update the canvas display
 	glFlush();
 	glFinish();
 }
 
 int main(){
-	glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
+	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
 	glutInitWindowSize(_WIDTH, _HEIGHT);
 	glutInitWindowPosition(0, 0);
 	glutCreateWindow("Car Dashboard");
