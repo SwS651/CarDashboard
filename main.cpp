@@ -200,6 +200,20 @@ void gps(GLfloat px, GLfloat py){
 }
 
 void accelerometer(GLfloat cx, GLfloat cy){
+	/*	
+		Number	= rotation angle 
+		0		= 45 or 47 or 48
+		1	 	= 35 or 38
+		2		= 25
+		3		= 10
+		4 		= -5
+		5		= -25
+		6		= -40
+		7		= -60
+		8		= -72 or -78 (Full)
+	*/
+	
+	
 	GLfloat px = cx;
 	GLfloat py = cy;
 	Accelerometer* accmeter = new Accelerometer();

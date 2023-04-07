@@ -18,13 +18,26 @@ void Accelerometer::drawAccelerometer(){
 	GLfloat cx = this->cx;
 	GLfloat cy = this->cy;
 
-
+		
+	/*	
+		Number	= rotation angle 
+		0		= 45 or 47 or 48
+		1	 	= 35 or 38
+		2		= 25
+		3		= 10
+		4 		= -5
+		5		= -25
+		6		= -40
+		7		= -60
+		8		=  -72 or -78 (Full)
+	*/
+	
 	glPushMatrix();
 	//progress bar (cyan color)	
 		setBorderColor(this->BG_R,this->BG_G,this->BG_B);
 		setFilledColor(0.5608f, 0.9294f, 0.9373f);
 		setUnfilledColor(this->BG_R,this->BG_G,this->BG_B);
-		rotate(8, cx,cy); //small number, progress bar increase
+		rotate(-78, cx,cy); //small number, progress bar increase
 		drawRingedCircle(105,cx,cy, 1, 0.5f, 88);
 	glPopMatrix();
 	glLoadIdentity();
@@ -121,22 +134,27 @@ void Accelerometer::drawAccelerometer(){
 		setFilledColor(1,0,0);
 		setUnfilledColor(this->BG_R,this->BG_G,this->BG_B);
 		rotate(-120,cx,cy);
-		drawRingedCircle(48,cx,cy,3,0.5f,34);
+		drawRingedCircle(48,cx,cy,3,0.5f,35);
 		glLoadIdentity();
 	glPopMatrix();
+	
+	//glPushMatrix();
+//		setFilledColor(0.5608f, 0.9294f, 0.9373f);		
+//		drawSector(105,cx,cy, 0.0f, 127); 
+//	glPopMatrix();
 	
 	//overlapping 50 % left red progress bar (top)
 	glPushMatrix();
 		setBorderColor(this->BG_R,this->BG_G,this->BG_B);
 		setFilledColor(this->BG_R,this->BG_G,this->BG_B);
 		setUnfilledColor(this->BG_R,this->BG_G,this->BG_B);
-		rotate(120,cx,cy);
+		rotate(100,cx,cy);
 		drawRingedCircle(83,cx,cy,3,0.5f,0);
 		glLoadIdentity();
 
 		//overlapping 50% left red progress bar (bottom)
 
-		rotate(50,cx,cy);
+		rotate(55,cx,cy);
 		drawRingedCircle(48,cx,cy,3,0.5f,0);
 		glLoadIdentity();
 	glPopMatrix();
@@ -149,10 +167,17 @@ void Accelerometer::drawAccelerometer(){
 	glPopMatrix();	
 	glLoadIdentity();
 
-		//accelerator pointer
+	//accelerator pointer
 	glPushMatrix();
+	rotate(-70,cx,cy);
 		glColor3f(1,0,0);
-		drawLine(cx-45,cy-5,cx-85,cy-15,3);
+		//Left side
+		drawLine(cx-25,cy-30,cx-55,cy-65,3);
+	glPopMatrix(); 
+	glLoadIdentity();
+	
+	glPushMatrix();
+		//Right side accelerator pointer
 		drawLine(cx+40,cy+10,cx+99,cy+29,3);
 	glPopMatrix(); 
 	glLoadIdentity();
