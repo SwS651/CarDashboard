@@ -1,5 +1,7 @@
 #include <windows.h>
 #include <gl/glut.h>
+#include <string>
+#include <sstream>
 
 #include "Dashboard.h"
 #include "Speedometer.h"
@@ -28,8 +30,30 @@ GLfloat pointerAng = 359;//138;
 GLfloat ii = 100;
 bool pFlag = true;
 
+// Keyboard Event Variable
+bool leftSignalFlag = false;
+bool rightSignalFlag = false;
+bool accelerateFlag = false;
+bool deccelerateFlag = false;
+
+GLfloat acceleration = 0.0f;
+GLfloat decceleration = 0.0f;
+
+GLint speed = 0;//in KM/H
+GLfloat distanceTravel = 14750.0f; //in KM
+
 GLfloat px = (_WIDTH/2)-280;
 GLfloat py = _HEIGHT/2;
+
+string int2StringConvert(GLint value){
+	//Convert int to string
+	stringstream ss;
+	ss << value;
+	
+	string valueStr = ss.str();
+	
+	return valueStr;
+}
 
 void drawText(const char *text, GLint length, GLint x, GLint y, void *font,GLfloat size){
 	glMatrixMode(GL_PROJECTION);
@@ -97,6 +121,55 @@ void speedoPointer(){
 	if (pointerAng >= 359) 
 		pFlag=false;
 }
+
+void accelerationCalculate(){
+	if(pointerAng <= 90){
+		pointerAng = 90;
+		acceleration = 0;
+	}
+	if(pointerAng >= 359){
+		pointerAng = 359;
+		decceleration = 0;
+	}
+
+	if (pointerAng >= 90 && accelerateFlag){ //accelerate
+		if(decceleration > 0.0)
+			decceleration -= 0.0015;
+		
+		else if(acceleration < 1.0)
+			acceleration += 0.0005;
+		pointerAng -= acceleration;
+	}
+	if(pointerAng >= 90 && !accelerateFlag){
+		if(acceleration > 0.0)
+			acceleration -= 0.0015;
+		if(acceleration <= 0)
+			acceleration = 0;
+		pointerAng -= acceleration;
+	}
+	
+	if (pointerAng <= 359 && deccelerateFlag){ //deccelerate
+		if(acceleration > 0.0)
+			acceleration -= 0.0015;
+			
+		else if(decceleration < 1.0)
+			decceleration += 0.0005;
+		pointerAng += decceleration;
+	}
+	if(pointerAng <= 359 && !deccelerateFlag){
+		if(decceleration > 0.0)
+			decceleration -= 0.0015;
+		if(decceleration <= 0)
+			decceleration = 0;
+		pointerAng += decceleration;
+	}
+	
+	speed = 359 - pointerAng;
+	
+	if(speed > 0){
+		distanceTravel = distanceTravel + (static_cast<float>(speed)/ 2400); //default: 1000
+	}
+}
 void spe2dometer(GLfloat px, GLfloat py){
 	GLfloat cx = (px/2)+23;
 	GLfloat cy = py+9;
@@ -109,9 +182,9 @@ void spe2dometer(GLfloat px, GLfloat py){
 	
 	speedometer->pointer();
 	speedometer->coreCircle(); 
-	speedoPointer();   //Animation
+	//speedoPointer();   //Animation
 
-	
+	accelerationCalculate();
 
 	delete speedometer;
 }
@@ -190,7 +263,7 @@ void renderingText(GLfloat px, GLfloat py){
 		glColor3f(1.0f, 1.0f, 1.0f);
 		drawText("H", 1, cx+345,cy+150, GLUT_BITMAP_HELVETICA_18,0);
 		drawText("KMH", 3, cx-295,cy-70, GLUT_BITMAP_HELVETICA_12,0);
-		drawText("0014750", 7,cx-315, cy-135, GLUT_BITMAP_HELVETICA_18,0);
+		drawText(int2StringConvert(distanceTravel).data(), 7,cx-315, cy-135, GLUT_BITMAP_HELVETICA_18,0);
 		
 		glColor3f(1,0,0);
 		drawText("-   +", 5, cx+5, cy-135, GLUT_BITMAP_HELVETICA_12,1);
@@ -276,12 +349,80 @@ void render(){
 	glFinish();
 }
 
+
+void onKeyboardReleased(unsigned char key, GLint x, GLint y){
+	switch(key){
+		case 'w': case 'W': accelerateFlag = false; // Accelerate
+			break;
+		case 'a': case 'A': leftSignalFlag = false; // Left Signal
+			break;
+		case 's': case 'S': deccelerateFlag = false; // Deccelerate
+			break;
+		case 'd': case 'D': rightSignalFlag = false; // Right Signal
+			break;
+		case 'p': case 'P': // Refill fuel
+		case 27: break;
+	}
+	glutPostRedisplay();
+}
+
+void onKeyboardPressed(unsigned char key, GLint x, GLint y){
+	switch(key){
+		case 'w': case 'W': accelerateFlag = true; // Accelerate
+			break;
+		case 'a': case 'A': leftSignalFlag = true; // Left Signal
+			break;
+		case 's': case 'S': deccelerateFlag = true; // Deccelerate
+			break;
+		case 'd': case 'D': rightSignalFlag = true; // Right Signal
+			break;
+		case 'p': case 'P': // Refill fuel
+		case 27: break;
+	}
+	glutPostRedisplay();
+}
+
+void onSpecialKeyboardReleased(GLint key, GLint x, GLint y){
+	switch(key){
+		case GLUT_KEY_UP: accelerateFlag = false;// Accelerate
+		break;
+		case GLUT_KEY_DOWN: deccelerateFlag = false; // Deccelerate
+		break;
+		case GLUT_KEY_LEFT: leftSignalFlag = false; // Left Signal
+		break;
+		case GLUT_KEY_RIGHT: rightSignalFlag = false; // Right Signal
+		break;
+		case GLUT_KEY_HOME: break;
+	}
+}
+
+void onSpecialKeyboardPressed(GLint key, GLint x, GLint y){
+	switch(key){
+		case GLUT_KEY_UP: accelerateFlag = true;// Accelerate
+		break;
+		case GLUT_KEY_DOWN: deccelerateFlag = true;// Deccelerate
+		break;
+		case GLUT_KEY_LEFT: leftSignalFlag = true;// Left Signal
+		break;
+		case GLUT_KEY_RIGHT: rightSignalFlag = true;// Right Signal
+		break;
+		case GLUT_KEY_HOME: break;
+	}
+}
+
 int main(){
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
 	glutInitWindowSize(_WIDTH,_HEIGHT);
 	glutInitWindowPosition(0, 0);
 	glutCreateWindow("Car Dashboard");
 	glutDisplayFunc(render); // Load render function.
+	
+	glutKeyboardFunc(onKeyboardPressed);
+	glutKeyboardUpFunc(onKeyboardReleased);
+	
+	glutSpecialFunc(onSpecialKeyboardPressed);
+	glutSpecialUpFunc(onSpecialKeyboardReleased);
+	
 	glutMainLoop(); // Loop frame forever.
 	
 	system("PAUSE");
