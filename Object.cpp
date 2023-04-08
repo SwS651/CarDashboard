@@ -184,7 +184,7 @@ void Object::drawSector(GLfloat radius, GLfloat cx,GLfloat cy, GLfloat startAngl
 	int numSegments = 50;
 	int lineWidth = 4;
     // Set the color for the sector
-    glColor3f(1.0f, 0.0f, 0.0f); // red
+    //glColor3f(1.0f, 0.0f, 0.0f); // red
 
     // Calculate the center of the sector
     // Set the start and end angles in radians
@@ -195,6 +195,9 @@ void Object::drawSector(GLfloat radius, GLfloat cx,GLfloat cy, GLfloat startAngl
     float angleInc = (endAngleRad - startAngleRad) / numSegments;
 
 	glPushMatrix();
+	
+	
+	
     glLineWidth(lineWidth);
     glColor3f(this->borderR,this->borderB,this->borderG);
     glBegin(GL_LINE_STRIP);
@@ -205,9 +208,11 @@ void Object::drawSector(GLfloat radius, GLfloat cx,GLfloat cy, GLfloat startAngl
 	        glVertex2f(x, y);
 	    }
     glEnd();
-
-
-	glColor3f(this->filledR,this->filledB,this->filledG);
+	glPopMatrix();
+	
+	
+	glPushMatrix();
+    glColor3f(this->filledR,this->filledB,this->filledG);
     // Begin drawing the sector using GL_TRIANGLE_FAN
     glBegin(GL_TRIANGLE_FAN);
 	    // Add the center vertex
@@ -221,7 +226,7 @@ void Object::drawSector(GLfloat radius, GLfloat cx,GLfloat cy, GLfloat startAngl
 	    }
 	// End drawing the sector
     glEnd();
-    
+   
     glPopMatrix();
     
     

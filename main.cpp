@@ -200,28 +200,31 @@ void gps(GLfloat px, GLfloat py){
 }
 
 void accelerometer(GLfloat cx, GLfloat cy){
-	/*	
-		Number	= rotation angle 
-		0		= 45 or 47 or 48
-		1	 	= 35 or 38
-		2		= 25
-		3		= 10
-		4 		= -5
-		5		= -25
-		6		= -40
-		7		= -60
-		8		= -72 or -78 (Full)
-	*/
-	
-	
 	GLfloat px = cx;
 	GLfloat py = cy;
+	/*Rotation Angle
+		0  	= 0
+		1 	= -12
+		2 	= -26
+		3	= -40
+		4	= -55
+		5	= -70
+		6	= -88
+		7	= -105
+		8	= -122 and above
+	*/
+	
 	Accelerometer* accmeter = new Accelerometer();
 	Symbol* symbols = new Symbol();
 
 	//Draw an accelerometer
 	accmeter->setBackgroundColor(THEME_R,THEME_G,THEME_B);
 	accmeter->setPosition(px+300,py+15);
+	
+	//Set variable pointer
+	
+
+	accmeter->accProgress = -30;  
 	accmeter->draw();
 	
 	glColor3f(0.4f,1,1);
@@ -344,19 +347,7 @@ void render(){
 	
 	// Render code here
 	da2hboard();
-	
-	
-	
-	
-	
-
-	
-	
-	
-
-
-	
-	
+		
 	glutSwapBuffers(); //Swap foreground and background frames.
 	glutPostRedisplay(); //update the canvas display
 	glFlush();

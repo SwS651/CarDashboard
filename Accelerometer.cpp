@@ -14,11 +14,9 @@ void Accelerometer::setPosition(GLint px,GLint py){
 	this->cy = py;
 }
 
-void Accelerometer::drawAccelerometer(){
+void Accelerometer::drawAccelerometerprogressBar(){
 	GLfloat cx = this->cx;
 	GLfloat cy = this->cy;
-
-		
 	/*	
 		Number	= rotation angle 
 		0		= 45 or 47 or 48
@@ -32,91 +30,101 @@ void Accelerometer::drawAccelerometer(){
 		8		=  -72 or -78 (Full)
 	*/
 	
+	/*Rotation Angle  //Pointer
+		0  	= 0
+		1 	= -12
+		2 	= -26
+		3	= -40
+		4	= -55
+		5	= -70
+		6	= -88
+		7	= -105
+		8	= -122 and above
+	*/
+	
+	//glPushMatrix();
+//		//rotate(-26,cx,cy);
+//		rotate(accProgress,cx,cy);
+//		//progress bar (cyan color)	
+//		setBorderColor(this->BG_R,this->BG_G,this->BG_B);
+//		setFilledColor(0.5608f, 0.9294f, 0.9373f);
+//		setUnfilledColor(this->BG_R,this->BG_G,this->BG_B);
+//		rotate(47, cx,cy); //small number, progress bar increase
+//		drawRingedCircle(105,cx,cy, 1, 0.5f, 88);
+//	glPopMatrix();
+//	glLoadIdentity();
+	
 	glPushMatrix();
-	//progress bar (cyan color)	
-		setBorderColor(this->BG_R,this->BG_G,this->BG_B);
+		rotate(50,cx,cy);
+		rotate(180,cx,cy);
+		setBorderColor(0.5608f, 0.9294f, 0.9373f);
 		setFilledColor(0.5608f, 0.9294f, 0.9373f);
-		setUnfilledColor(this->BG_R,this->BG_G,this->BG_B);
-		rotate(-78, cx,cy); //small number, progress bar increase
-		drawRingedCircle(105,cx,cy, 1, 0.5f, 88);
+		drawSector(105,cx,cy,0,accProgress);
 	glPopMatrix();
 	glLoadIdentity();
 	
+
 	
-	//Draw top and bottom of progress bar line (white)
+	
+} 
+void Accelerometer::drawAccelerometerPointer(){
+	GLfloat cx = this->cx;
+	GLfloat cy = this->cy;
+	/*Rotation Angle
+		0  	= 0
+		1 	= -12
+		2 	= -26
+		3	= -40
+		4	= -55
+		5	= -70
+		6	= -88
+		7	= -105
+		8	= -122 and above
+	*/
+	
+	//accelerator pointer
 	glPushMatrix();
-		glColor3f(1,1,1);
-		rotate(11,cx,cy);
-		drawLine(cx,cy+105,cx,cy,3);
-		glLoadIdentity();
-		
-		glColor3f(1,1,1);
-		rotate(139,cx,cy);
-		drawLine(cx,cy+105,cx,cy,3);
-		glLoadIdentity();
-	glPopMatrix();
-	
-	//Draw progress bar line
-	glPushMatrix();
-		glColor3f(1,1,1);
-		drawCircle(88,cx,cy,2);
-		glLoadIdentity();
-	glPopMatrix();
-	
-	glPushMatrix();
-		//overlapping (coverage area)
-		setBorderColor(this->BG_R,this->BG_G,this->BG_B);
-		setFilledColor(this->BG_R,this->BG_G,this->BG_B);
-		setUnfilledColor(this->BG_R,this->BG_G,this->BG_B);
-		rotate(100, cx,cy);
-		drawRingedCircle(105,cx,cy, 1, 0.5f, 0);
-		glLoadIdentity();
-	
-		setBorderColor(this->BG_R,this->BG_G,this->BG_B);
-		setFilledColor(this->BG_R,this->BG_G,this->BG_B);
-		setUnfilledColor(this->BG_R,this->BG_G,this->BG_B);
-		rotate(50, cx,cy);
-		drawRingedCircle(105,cx,cy, 1, 0.5f, 0);
-		glLoadIdentity();
-	glPopMatrix();
-	
-	//Outline circle
-	glPushMatrix();
-		glColor3f(this->BG_R,this->BG_G,this->BG_B);
-		drawSolidCircle(88,cx,cy,1);
-	
-		glColor3f(1,1,1);
-		drawCircle(106,cx,cy,4);
-	glPopMatrix();
+		rotate(accProgress,cx,cy);    //Interact with the variable in main
+		//rotate(0,cx,cy);
+		glColor3f(1,0,0);
+		//Left side
+		drawLine(cx-25,cy-30,cx-55,cy-65,3);
+	glPopMatrix(); 
 	glLoadIdentity();
-	
+} 
+
+void Accelerometer::drawFuel(){
 	//Fuel
 	glPushMatrix();
 		setBorderColor(0.8510f,0.8510f,0.8510f);
 		setFilledColor(0.85f,0.85f,0.85f);
 		rotate(-30,cx,cy);
+		
+		//sweepAngle increase then fuel increase, otherwise decrease (47.0f)
 		drawSector(101,cx,cy, 0.0f, 47.0f);
 	glPopMatrix();
 	glLoadIdentity();
 	
-	//fuel outline white color 
+	////fuel outline white color, BG empty circle and filled circle
 	glPushMatrix();
 		setBorderColor(1,1,1);
-		rotate(-30,cx,cy);
-		drawSector(80,cx,cy, 0.0f, 65.0f);
+		setFilledColor(this->BG_R,this->BG_G,this->BG_B);
+		setUnfilledColor(this->BG_R,this->BG_G,this->BG_B);
+		rotate(-30, cx,cy); //small number, progress bar increase
+		drawRingedCircle(80,cx,cy, 3, 0.18f, 78);
 	glPopMatrix();
 	glLoadIdentity();
 	
 	//Top and bottom line (fuel)
 	glPushMatrix();
 		glColor3f(1,1,1);
-		rotate(35,cx+62,cy+50);
-		drawLine(cx+62,cy+45,cx+88,cy+45,3);
+		rotate(35,cx+63,cy+50);
+		drawLine(cx+63,cy+45,cx+88,cy+45,3);
 		glLoadIdentity();
 		
 		glColor3f(1,1,1);
-		rotate(-33,cx+62,cy-35);
-		drawLine(cx+62,cy-35,cx+95,cy-35,3);
+		rotate(-29,cx+69,cy-35);
+		drawLine(cx+69,cy-38,cx+95,cy-38,3);
 		glLoadIdentity();
 		
 		drawLine(cx+116,cy+8,cx+116,cy+12,2);
@@ -127,62 +135,89 @@ void Accelerometer::drawAccelerometer(){
 		drawRect(cx+115,cy-15,20,25);
 		glLoadIdentity();
 	glPopMatrix();
+}
+
+void Accelerometer::drawAccelerometer(){
+	GLfloat cx = this->cx;
+	GLfloat cy = this->cy;
+
+	//Draw top and bottom of progress bar line (white)
+	glPushMatrix();
+		glColor3f(1,1,1);
+		rotate(11,cx,cy);
+		drawLine(cx,cy+105,cx,cy+88,3);
+		glLoadIdentity();
+		
+		glColor3f(1,1,1);
+		rotate(139,cx,cy);
+		drawLine(cx,cy+105,cx,cy+88,3);
+		glLoadIdentity();
+	glPopMatrix();
 	
+	
+	//Outline accelerometer circle (White)
+	glPushMatrix();
+		glColor3f(this->BG_R,this->BG_G,this->BG_B);
+		//Inside
+		drawSolidCircle(88,cx,cy,1);
+	
+		//outside
+		glColor3f(1,1,1);
+		drawCircle(107,cx,cy,4);
+	glPopMatrix();
+	glLoadIdentity();
+	
+	
+	//Coverage
+	glPushMatrix();
+	rotate(100,cx,cy);
+		setFilledColor(this->BG_R,this->BG_G,this->BG_B);
+		setBorderColor(1,1,1);
+		drawRingedCircle(87,cx,cy,3,0.36f,0);
+	glPopMatrix();
+	glLoadIdentity();
+	
+	////270 degree coverarea in accelerometer
+//	glPushMatrix();
+//	
+//		rotate(-130,cx,cy);
+//		setBorderColor(this->BG_R,this->BG_G,this->BG_B);
+//		setFilledColor(this->BG_R,this->BG_G,this->BG_B);
+//		drawSector(88,cx,cy,0,230);
+//	
+//	glPopMatrix();
+//	glLoadIdentity();
+}
+
+void Accelerometer::drawMiddleRedAreaRing(){
+	GLfloat cx = this->cx;
+	GLfloat cy = this->cy;
+
 	//red progress bar
 	glPushMatrix();
-		setBorderColor(this->BG_R,this->BG_G,this->BG_B);
+		setBorderColor(1,0,0);
 		setFilledColor(1,0,0);
-		setUnfilledColor(this->BG_R,this->BG_G,this->BG_B);
-		rotate(-120,cx,cy);
-		drawRingedCircle(48,cx,cy,3,0.5f,35);
+		rotate(102,cx,cy);
+		drawSector(45,cx,cy,0,128);
 		glLoadIdentity();
 	glPopMatrix();
-	
-	//glPushMatrix();
-//		setFilledColor(0.5608f, 0.9294f, 0.9373f);		
-//		drawSector(105,cx,cy, 0.0f, 127); 
-//	glPopMatrix();
-	
-	//overlapping 50 % left red progress bar (top)
-	glPushMatrix();
-		setBorderColor(this->BG_R,this->BG_G,this->BG_B);
-		setFilledColor(this->BG_R,this->BG_G,this->BG_B);
-		setUnfilledColor(this->BG_R,this->BG_G,this->BG_B);
-		rotate(100,cx,cy);
-		drawRingedCircle(83,cx,cy,3,0.5f,0);
-		glLoadIdentity();
 
-		//overlapping 50% left red progress bar (bottom)
-
-		rotate(55,cx,cy);
-		drawRingedCircle(48,cx,cy,3,0.5f,0);
-		glLoadIdentity();
-	glPopMatrix();
-	
-	
-	//circle line (red)
+	//outline circle (red)
 	glPushMatrix();
 		glColor3f(1,0,0);
-		drawCircle(40,cx,cy,3);
+		drawCircle(41,cx,cy,3);
+		glColor3f(this->BG_R,this->BG_G,this->BG_B);
+		drawSolidCircle(35,cx,cy,0.1f);
 	glPopMatrix();	
 	glLoadIdentity();
 
-	//accelerator pointer
-	glPushMatrix();
-	rotate(-70,cx,cy);
-		glColor3f(1,0,0);
-		//Left side
-		drawLine(cx-25,cy-30,cx-55,cy-65,3);
-	glPopMatrix(); 
-	glLoadIdentity();
-	
 	glPushMatrix();
 		//Right side accelerator pointer
+		glColor3f(1,0,0);
 		drawLine(cx+40,cy+10,cx+99,cy+29,3);
 	glPopMatrix(); 
 	glLoadIdentity();
-	
-}
+} 
 
 void Accelerometer::drawCoolantBar(){
 	GLfloat cx = this->cx;
@@ -271,13 +306,20 @@ void Accelerometer::drawGearText(){
 
 		drawRect(cx+3,cy-9,25,5);
 		drawRect(cx+18,cy-15,5,28);
-		
+		glLoadIdentity();
 	glPopMatrix();
 }
 
 void Accelerometer::draw(){
 	drawCoolantBar();
+	drawAccelerometerprogressBar();
+	
 	drawAccelerometer();
+	drawFuel();
+	drawMiddleRedAreaRing();
+	drawAccelerometerPointer();
+	
 	drawGearText();
+	
 	
 }
