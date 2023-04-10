@@ -10,6 +10,8 @@
 #include "Symbol.h"
 #include "BottomBar.h"
 
+#include "CustomFont.h"
+
 using namespace std;
 
 const int _WIDTH = 1200;
@@ -44,6 +46,10 @@ GLfloat distanceTravel = 14750.0f; //in KM
 
 GLfloat px = (_WIDTH/2)-280;
 GLfloat py = _HEIGHT/2;
+
+bool isCarBooting = false;
+bool isCarStarted = true;
+bool isGPSSet = false;
 
 string int2StringConvert(GLint value){
 	//Convert int to string
@@ -188,7 +194,9 @@ void spe2dometer(GLfloat px, GLfloat py){
 
 	delete speedometer;
 }
-void gps(GLfloat px, GLfloat py){
+
+
+void gps(GLfloat px, GLfloat py,GLboolean isGPSSet){
 	GLfloat cx = px;
 	GLfloat cy = py;
 	Gps* gPs = new Gps();
@@ -196,6 +204,11 @@ void gps(GLfloat px, GLfloat py){
 	gPs->setPosition(px,py+20);
 	gPs->draw();
 	
+	if(isGPSSet){
+		gPs->drawNavigation();
+		glColor3f(1,1,1);
+		drawText("7 KM", 4,cx+50, cy-55, GLUT_BITMAP_HELVETICA_18,0);
+	}
 	delete gPs;
 }
 
@@ -213,7 +226,6 @@ void accelerometer(GLfloat cx, GLfloat cy){
 		7	= -105
 		8	= -122 and above
 	*/
-	
 	Accelerometer* accmeter = new Accelerometer();
 	Symbol* symbols = new Symbol();
 
@@ -225,7 +237,8 @@ void accelerometer(GLfloat cx, GLfloat cy){
 	
 
 	accmeter->accProgress = -30;  
-	accmeter->draw();
+	accmeter->status = false;
+	accmeter->display();
 	
 	glColor3f(0.4f,1,1);
 	symbols->drawCoolantSymbol(px+300,py+155.5f);
@@ -234,32 +247,61 @@ void accelerometer(GLfloat cx, GLfloat cy){
 	delete symbols;
 }
 
+GLint pnn = 0;
+
+
 void bottomBar(GLfloat cx, GLfloat cy){
-	Symbol* symbols = new Symbol();
+	
 	GLfloat px = cx;
 	GLfloat py = cy;
 	
 	BottomBar* btmbar = new BottomBar();
+	Symbol* symbols = new Symbol();
 	
+	if(isCarStarted) isCarBooting = false;  //If car started, car warning signs will not appear
+		
 	btmbar->setBackgroundColor(THEME_R,THEME_G,THEME_B);
 	btmbar->setPosition(px,py);
-	btmbar->draw();
+	btmbar->drawBottomBar();
 	
+	
+	//Set speed at here!!!
+	if(isCarStarted || isCarBooting)
+		btmbar->drawSpeedText(122);
+	
+
+		
 	//draw engine alert, oil pressure alert, and battery symbols at different positions on the bottom bar. 
 	//set the color theme for the Battery Symbol.
-	symbols->drawEngineAlert(px-150,py-142);
-	symbols->drawOilPresureAlert(px-75,py-142);
-	symbols->setTheme(THEME_R,THEME_G,THEME_B);
-	symbols->drawBatterySymbol(px-5,py-142);
+	//When car is bootting, all symbols will display
+	//If car is not started and booting = true
+	if(!isCarStarted && isCarBooting){
+		symbols->drawEngineAlert(px-150,py-142);
+		symbols->drawOilPresureAlert(px-75,py-142);
+		symbols->setTheme(THEME_R,THEME_G,THEME_B);
+		
+		
+		symbols->drawBatterySymbol(px-5,py-142);
+		glColor3f(1,0,0);
+		drawText("-   +", 5, cx+5, cy-135, GLUT_BITMAP_HELVETICA_12,1);
+		
+		glColor3ub(240,80,68);
+		drawText("ABS", 3, cx+60, cy-134, GLUT_BITMAP_HELVETICA_12,1);
+		symbols->drawABSAlert(px+72.5f,py-130);
+
+	}
 	
+	//If car is started
+	if(isCarStarted || isCarBooting){
+		drawText("!", 1, cx+117, cy-135, GLUT_BITMAP_HELVETICA_18,1);
+		glColor3ub(240,80,68);
+		symbols->drawBreakAlert(px+120,py-130);
+		glLoadIdentity();
+	}
 	
-	glColor3ub(240,80,68);
-	symbols->drawABSAlert(px+72.5f,py-130);
-	symbols->drawBreakAlert(px+120,py-130);
-	glLoadIdentity();
 	
 	glColor3ub(255,0,0);
-	symbols->drawCoolantSymbol(px+170,py-142);
+	//symbols->drawCoolantSymbol(px+170,py-142);
 	glLoadIdentity();
 	
 	
@@ -274,26 +316,18 @@ void renderingText(GLfloat px, GLfloat py){
 
 	glPushMatrix();
 
+	if(isCarStarted || isCarBooting){
 		glColor3f(1.0f, 1.0f, 1.0f);
-		drawText("C", 1, cx+245,cy+150, GLUT_BITMAP_HELVETICA_18,0);
-		
-		glColor3f(1.0f, 1.0f, 1.0f);
-		drawText("H", 1, cx+345,cy+150, GLUT_BITMAP_HELVETICA_18,0);
 		drawText("KMH", 3, cx-295,cy-70, GLUT_BITMAP_HELVETICA_12,0);
 		drawText(int2StringConvert(distanceTravel).data(), 7,cx-315, cy-135, GLUT_BITMAP_HELVETICA_18,0);
 		
-		glColor3f(1,0,0);
-		drawText("-   +", 5, cx+5, cy-135, GLUT_BITMAP_HELVETICA_12,1);
-		
-		glColor3ub(240,80,68);
-		drawText("ABS", 3, cx+60, cy-134, GLUT_BITMAP_HELVETICA_12,1);
-		drawText("!", 1, cx+117, cy-135, GLUT_BITMAP_HELVETICA_18,1);
-		
-		
 		glColor3f(1,1,1);
-		drawText("7 KM", 4,cx+50, cy-55, GLUT_BITMAP_HELVETICA_18,0);
 		drawText("25.0 'C", 7,_WIDTH-280, cy-135, GLUT_BITMAP_HELVETICA_18,0);
 		
+	}
+		glColor3f(1.0f, 1.0f, 1.0f);
+		drawText("C", 1, cx+245,cy+150, GLUT_BITMAP_HELVETICA_18,0);
+		drawText("H", 1, cx+345,cy+150, GLUT_BITMAP_HELVETICA_18,0);
 		
 		drawText("0", 1,cx+250, cy-51, GLUT_BITMAP_HELVETICA_12,0);
 		drawText("1", 1,cx+235, cy-37, GLUT_BITMAP_HELVETICA_12,0);
@@ -310,29 +344,70 @@ void renderingText(GLfloat px, GLfloat py){
     glPopMatrix();
 }
 
-void da2hboard(){
+
+
+void carDashboard(){
 	GLfloat px = _WIDTH/2;
 	GLfloat py = _HEIGHT/2 - 200;
 	Dashboard* dashboard = new Dashboard();
-	Symbol* signals = new Symbol();
-	dashboard->setColor(THEME_R,THEME_G,THEME_B);
+	Accelerometer* accelerometer = new Accelerometer();
+	Symbol* symbols = new Symbol();
+	
+	
+	//Car started, 
+	isCarStarted = true;
+	isCarBooting = false;
+	
+	//If car is started, then booting state change to false
+	if(isCarStarted)
+		isCarBooting =false;
+		
+		
+	//All render code at here!!!
+	dashboard->setColor(THEME_R,THEME_G,THEME_B,1);
 	dashboard->setPosition(px,py);
 	dashboard->draw();
 	
 	
-	//All dashboard here
-	signals->drawSignals(px,py-15);
-	spe2dometer(px,py);
-	gps(px,py);
-	accelerometer(px,py);
-
-	bottomBar(px,py);
+	//Accelerometer Configuration 
+	accelerometer->setBackgroundColor(THEME_R,THEME_G,THEME_B);
+	accelerometer->setPosition(px+300,py+15);
+	accelerometer->accProgress = 0;
 	
-	renderingText(px,py);
-	delete signals;
-	delete dashboard;
-}
+	if(isCarStarted || isCarBooting)
+		accelerometer->status = true;
+	
+	else accelerometer->status = false;
+	accelerometer->display();
+	
+	if(isCarBooting)
+		symbols->drawSignals(px,py-15);
+		
+	
+	if(isCarStarted || isCarBooting){
+	
+		//if set GPS
+			//gps(px,py,true);
+		//else	
+			gps(px,py,false);
+		glColor3f(0.4f,1,1);
+		symbols->drawCoolantSymbol(px+300,py+155.5f);
+	}
+	spe2dometer(px,py);
+	bottomBar(px,py);
 
+	//	A dark overlay covers the dashboard when the car is in not started state
+	if(!isCarStarted && !isCarBooting){
+		dashboard->setColor(0.0147,0.1418,0.2902,0.5);
+		dashboard->setPosition(px,py);
+		dashboard->draw();
+	}
+	renderingText(px,py);
+	
+	delete accelerometer;
+	delete symbols;
+	delete dashboard;
+} 
 void render(){
 
 	
@@ -345,9 +420,22 @@ void render(){
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	
+	
+	
 	// Render code here
-	da2hboard();
-		
+	//carDashboard(true);
+	carDashboard();
+
+	
+	/****Test CustomFont****/
+	//CustomFont* number = new CustomFont();
+	//number->setPosition(_WIDTH/2-70,_HEIGHT/2);
+	//glColor3f(1,0,1);
+	//number->drawRect(_WIDTH/2,_HEIGHT/2,30,38);
+	//number->draw1(_WIDTH/2,_HEIGHT/2);
+	//number->setFontText(_WIDTH/2-260,_HEIGHT/2,"102131415161718191");
+	//delete number;
+	
 	glutSwapBuffers(); //Swap foreground and background frames.
 	glutPostRedisplay(); //update the canvas display
 	glFlush();

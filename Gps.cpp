@@ -62,8 +62,14 @@ void Gps::drawGPS(){
 		glColor3f(0.8157f,0.8078f,0.8078f);
 		drawRect(cx,cy-100,10,200);
 		glLoadIdentity();
+	glPopMatrix();	
 		
-		
+	
+	
+}
+
+void Gps::drawNavigation(){
+	glPushMatrix();
 		//center road cyan
 		glColor3f(0.5608f, 0.9294f, 0.9373f);
 		drawRect(cx-1,(cy-80)+20,12,160);
@@ -99,7 +105,6 @@ void Gps::drawGPS(){
 		//drawText("7 KM", text.size(), cx+45,cy-75, GLUT_BITMAP_HELVETICA_18,3.0f);
 		//glLoadIdentity();
 	glPopMatrix();
-	
 }
 void Gps::draw(){
 	drawGPS();

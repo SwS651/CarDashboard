@@ -94,16 +94,20 @@ void Accelerometer::drawAccelerometerPointer(){
 } 
 
 void Accelerometer::drawFuel(){
-	//Fuel
-	glPushMatrix();
-		setBorderColor(0.8510f,0.8510f,0.8510f);
-		setFilledColor(0.85f,0.85f,0.85f);
-		rotate(-30,cx,cy);
-		
-		//sweepAngle increase then fuel increase, otherwise decrease (47.0f)
-		drawSector(101,cx,cy, 0.0f, 47.0f);
-	glPopMatrix();
-	glLoadIdentity();
+	
+	if(this->status){
+		//Fuel
+		glPushMatrix();
+			setBorderColor(0.8510f,0.8510f,0.8510f);
+			setFilledColor(0.85f,0.85f,0.85f);
+			rotate(-30,cx,cy);
+			
+			//sweepAngle increase then fuel increase, otherwise decrease (47.0f)
+			drawSector(101,cx,cy, 0.0f, 47.0f);
+		glPopMatrix();
+		glLoadIdentity();
+	}
+	
 	
 	////fuel outline white color, BG empty circle and filled circle
 	glPushMatrix();
@@ -177,16 +181,6 @@ void Accelerometer::drawAccelerometer(){
 	glPopMatrix();
 	glLoadIdentity();
 	
-	////270 degree coverarea in accelerometer
-//	glPushMatrix();
-//	
-//		rotate(-130,cx,cy);
-//		setBorderColor(this->BG_R,this->BG_G,this->BG_B);
-//		setFilledColor(this->BG_R,this->BG_G,this->BG_B);
-//		drawSector(88,cx,cy,0,230);
-//	
-//	glPopMatrix();
-//	glLoadIdentity();
 }
 
 void Accelerometer::drawMiddleRedAreaRing(){
@@ -211,10 +205,17 @@ void Accelerometer::drawMiddleRedAreaRing(){
 	glPopMatrix();	
 	glLoadIdentity();
 
+	
 	glPushMatrix();
 		//Right side accelerator pointer
 		glColor3f(1,0,0);
-		drawLine(cx+40,cy+10,cx+99,cy+29,3);
+		if(this->status)
+			drawLine(cx+40,cy+10,cx+99,cy+29,3);
+		else{
+			rotate(-45,cx,cy);
+			drawLine(cx+40,cy+10,cx+99,cy+29,3);
+		}
+			
 	glPopMatrix(); 
 	glLoadIdentity();
 } 
@@ -224,16 +225,16 @@ void Accelerometer::drawCoolantBar(){
 	GLfloat cy = this->cy;
 	
 
-	glPushMatrix();
-		setBorderColor(1,1,1);
-		setFilledColor(1,1,1);
-		setUnfilledColor(this->BG_R,this->BG_G,this->BG_B);
-		rotate(-100, cx,cy);
-		drawRingedCircle(135,cx,cy, 1, 0.5f, 122);
-		glLoadIdentity();
-	glPopMatrix();
-	
-	
+	if(this->status){
+		glPushMatrix();
+			setBorderColor(1,1,1);
+			setFilledColor(1,1,1);
+			setUnfilledColor(this->BG_R,this->BG_G,this->BG_B);
+			rotate(-100, cx,cy);
+			drawRingedCircle(135,cx,cy, 1, 0.5f, 122);
+			glLoadIdentity();
+		glPopMatrix();	
+	}
 	
 	glPushMatrix();
 		//coolant top outline
@@ -272,54 +273,73 @@ void Accelerometer::drawCoolantBar(){
 		rotate(-23,cx,cy);
 		drawLine(cx,cy+120,cx,cy+136,3);
 		glLoadIdentity();
+		
+		glColor3f(1,1,1);
+		rotate(20,cx,cy);
+		drawLine(cx,cy+120,cx,cy+136,3);
+		glLoadIdentity();
 	glPopMatrix();
 
 	
 	
 }
 
-void Accelerometer::drawGearText(){
+void Accelerometer::displayGear(string gear = ""){
 	GLfloat cx = this->cx;
 	GLfloat cy = this->cy;
 	
-	//Output: D4
-	//D
-	glPushMatrix();
-		setBorderColor(this->BG_R,this->BG_G,this->BG_B);
-		setFilledColor(0.95f,0.95f,0.95f);
-		setUnfilledColor(this->BG_R,this->BG_G,this->BG_B);
-		rotate(110,cx-13,cy);
-		drawRingedCircle(15,cx-13,cy,1,0.4f,8);
-		glLoadIdentity();
-		
-		glColor3f(0.95f,0.95f,0.95f);
-		drawRect(cx-24,cy-14,7,28);
-	glPopMatrix();
 	
-	//4
-	glPushMatrix();
+	if(gear=="D4"){
+		//Output: D
+		glPushMatrix();
+			setBorderColor(this->BG_R,this->BG_G,this->BG_B);
+			setFilledColor(0.95f,0.95f,0.95f);
+			setUnfilledColor(this->BG_R,this->BG_G,this->BG_B);
+			rotate(110,cx-13,cy);
+			drawRingedCircle(15,cx-13,cy,1,0.4f,8);
+			glLoadIdentity();
+			
+			glColor3f(0.95f,0.95f,0.95f);
+			drawRect(cx-24,cy-14,7,28);
+		glPopMatrix();
+		
+		//Output:4
+		glPushMatrix();
+	
+			glColor3f(0.9f,0.9f,0.9f);
+			rotate(50,cx+5,cy-8);
+			drawRect(cx+5,cy-8,25,4);
+			glLoadIdentity();
+	
+			drawRect(cx+3,cy-9,25,5);
+			drawRect(cx+18,cy-15,5,28);
+			glLoadIdentity();
+		glPopMatrix();
+	}else if(gear == "R"){
+		
+	}
+	else if(gear =="N"){
+		
+	}else{}
+	
+	
 
-		glColor3f(0.9f,0.9f,0.9f);
-		rotate(50,cx+5,cy-8);
-		drawRect(cx+5,cy-8,25,4);
-		glLoadIdentity();
-
-		drawRect(cx+3,cy-9,25,5);
-		drawRect(cx+18,cy-15,5,28);
-		glLoadIdentity();
-	glPopMatrix();
 }
 
-void Accelerometer::draw(){
-	drawCoolantBar();
-	drawAccelerometerprogressBar();
+
+void Accelerometer::display(){
 	
+	
+	drawCoolantBar();
+	
+	if(this->status)
+	drawAccelerometerprogressBar();
+		
 	drawAccelerometer();
 	drawFuel();
 	drawMiddleRedAreaRing();
 	drawAccelerometerPointer();
 	
-	drawGearText();
-	
 	
 }
+

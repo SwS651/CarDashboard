@@ -143,3 +143,5 @@ void Symbol::drawSignals(GLfloat px, GLfloat py){
 	glLoadIdentity();
 	
 }
+
+

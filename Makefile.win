@@ -4,8 +4,8 @@
 CPP      = g++.exe
 CC       = gcc.exe
 WINDRES  = windres.exe
-OBJ      = main.o Object.o Symbol.o Speedometer.o Accelerometer.o BottomBar.o Gps.o Dashboard.o
-LINKOBJ  = main.o Object.o Symbol.o Speedometer.o Accelerometer.o BottomBar.o Gps.o Dashboard.o
+OBJ      = main.o Object.o Symbol.o Speedometer.o Accelerometer.o BottomBar.o Gps.o Dashboard.o CustomFont.o
+LINKOBJ  = main.o Object.o Symbol.o Speedometer.o Accelerometer.o BottomBar.o Gps.o Dashboard.o CustomFont.o
 LIBS     = -L"C:/Program Files (x86)/Dev-Cpp/MinGW32/lib" -static-libstdc++ -static-libgcc -mwindows "C:/Program Files (x86)/Dev-Cpp/MinGW32/lib/libglu32.a" "C:/Program Files (x86)/Dev-Cpp/MinGW32/lib/libglut32.a" "C:/Program Files (x86)/Dev-Cpp/MinGW32/lib/libopengl32.a"  -g3
 INCS     = -I"C:/Program Files (x86)/Dev-Cpp/MinGW32/include"
 CXXINCS  = -I"C:/Program Files (x86)/Dev-Cpp/MinGW32/include"
@@ -48,3 +48,6 @@ Gps.o: Gps.cpp
 
 Dashboard.o: Dashboard.cpp
 	$(CPP) -c Dashboard.cpp -o Dashboard.o $(CXXFLAGS)
+
+CustomFont.o: CustomFont.cpp
+	$(CPP) -c CustomFont.cpp -o CustomFont.o $(CXXFLAGS)

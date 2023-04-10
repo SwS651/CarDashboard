@@ -13,15 +13,18 @@ class Accelerometer : public Object{
 		void drawAccelerometer();
 		void drawCoolantBar();
 		void drawFuel();
-		void drawGearText();
+		
 		void drawMiddleRedAreaRing();
-		void draw();
+		void displayGear(string gear);
+		void display();
+
 	
 	protected:
 		GLfloat BG_R,BG_G,BG_B;
 		GLint cx,cy;
 	public:
 		GLfloat accProgress;
+		GLfloat status;
 };
 
 #endif
