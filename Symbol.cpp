@@ -135,6 +135,7 @@ void Symbol::drawRightSignal(GLfloat px, GLfloat py){
 	
 
 	glPushMatrix();
+		glColor3f(0.2f,1,0.4f); //To make sure the signal color is green (the signal become red if without it)
 		rotate(180,px,py+170);
 		drawRect(px-145,py+165,22,10);
 		rotate(90,px-152,py+170);
