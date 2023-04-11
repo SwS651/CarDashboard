@@ -119,26 +119,26 @@ void Symbol::drawOilPresureAlert(GLfloat px,GLfloat py){
 	glPopMatrix();
 	glLoadIdentity();
 }
-
-void Symbol::drawSignals(GLfloat px, GLfloat py){
-	GLfloat cx = px;
-	GLfloat cy = py;
-	
+void Symbol::drawLeftSignal(GLfloat px, GLfloat py){
 	glPushMatrix();
 		glColor3f(0.2f,1,0.4f);
-		drawRect(cx-145,cy+165,22,10);
+		drawRect(px-145,py+165,22,10);
 
-		rotate(90,cx-152,cy+170);
-		drawTriangle(cx-152,cy+170,8);
+		rotate(90,px-152,py+170);
+		drawTriangle(px-152,py+170,8);
 		
 	glPopMatrix();
 	glLoadIdentity();
+}
+void Symbol::drawRightSignal(GLfloat px, GLfloat py){
+
 	
+
 	glPushMatrix();
-		rotate(180,cx,cy+170);
-		drawRect(cx-145,cy+165,22,10);
-		rotate(90,cx-152,cy+170);
-		drawTriangle(cx-152,cy+170,8);
+		rotate(180,px,py+170);
+		drawRect(px-145,py+165,22,10);
+		rotate(90,px-152,py+170);
+		drawTriangle(px-152,py+170,8);
 	glPopMatrix();
 	glLoadIdentity();
 	

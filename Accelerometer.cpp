@@ -315,12 +315,39 @@ void Accelerometer::displayGear(string gear = ""){
 			drawRect(cx+18,cy-15,5,28);
 			glLoadIdentity();
 		glPopMatrix();
-	}else if(gear == "R"){
+	}
+	if(gear == "R"){
+		glPushMatrix();
+			glColor3f(0.9f,0.9f,0.9f);
+			drawRect(cx-8,cy+15,14,8);
+			
+			drawSolidCircle(14,cx+4,cy+9,1);
+			
+			glColor3f(this->BG_R,this->BG_G,this->BG_B);
+			drawSolidCircle(8,cx+2,cy+9,1);
+			
+			glColor3f(0.9f,0.9f,0.9f);
+			drawRect(cx-8,cy-6,15,7);
+			
+			drawRect(cx-13,cy-25,8,48);
+			rotate(20,cx+11,cy-24);
+			drawRect(cx+11,cy-24,7,20);
+			glLoadIdentity();
+		glPopMatrix();
 		
 	}
-	else if(gear =="N"){
-		
-	}else{}
+	if(gear =="N"){
+		glPushMatrix();
+			glColor3f(0.9f,0.9f,0.9f);
+			drawRect(cx-15,cy-19,7,38); 
+			
+			rotate(-55,cx-15,cy+15);
+			drawRect(cx-15,cy+15,40,7); 
+			glLoadIdentity();
+			drawRect(cx+9,cy-19,7,38); 
+			glLoadIdentity();
+		glPopMatrix();
+	}
 	
 	
 

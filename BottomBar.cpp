@@ -21,6 +21,12 @@ void BottomBar::drawBottomBar(){
 	
 	//BorderLine
 	glPushMatrix();
+		
+		//hidden place for GPS
+		glColor3f(this->BG_R,this->BG_G,this->BG_B);
+		drawRect(cx-60,cy+120,160,70);//Top
+		drawRect(cx-60,cy-107,160,26);//Bottom
+		
 		glColor3f(1,1,1);
 		drawLine(px-400,py-149,px-328,py-49,5);
 		drawLine(px-328,py-49,px-230,py-49,5);

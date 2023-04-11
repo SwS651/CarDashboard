@@ -195,7 +195,12 @@ void spe2dometer(GLfloat px, GLfloat py){
 	delete speedometer;
 }
 
-
+GLfloat yNavVel = 10;
+GLfloat navline = 160;
+GLboolean isMove = true;
+GLfloat distanceRemaining = 756; 
+//CenterPoint => X: 600  Y: 160
+//Y =115  set the crossroad above the map 
 void gps(GLfloat px, GLfloat py,GLboolean isGPSSet){
 	GLfloat cx = px;
 	GLfloat cy = py;
@@ -203,12 +208,48 @@ void gps(GLfloat px, GLfloat py,GLboolean isGPSSet){
 	gPs->setRoadColor(0.8157f,0.8078f,0.8078f);
 	gPs->setPosition(px,py+20);
 	gPs->draw();
-	
+	gPs->drawCrossRoad(yNavVel);  
+		
 	if(isGPSSet){
-		gPs->drawNavigation();
+		gPs->drawNavigation(navline);
 		glColor3f(1,1,1);
 		drawText("7 KM", 4,cx+50, cy-55, GLUT_BITMAP_HELVETICA_18,0);
 	}
+		
+	//GPS Animation here
+	/*
+		Car starts moving.
+		If the roadintersection drops out of sight, 
+		set its position above the map and stop moving.
+	*/
+	if(isMove)
+	{
+		if(yNavVel>=(py-313))
+			yNavVel-=0.5f;
+		else
+		{
+			yNavVel=115;
+			isMove=false;
+		}
+	}
+	
+	/*If the remaining distance is equal to this number, 
+	its position is at the road intersection position above the map. 
+	The road intersection starts moving with cyan navigation
+	*/
+	if(distanceRemaining==220)
+		isMove = true;
+	if(distanceRemaining <=160)
+		navline-=1;
+		
+	if(distanceRemaining>=0)
+		distanceRemaining-=1;
+	else{
+		navline = 0;
+		isMove = false;
+	}
+		 
+	
 	delete gPs;
 }
 
@@ -344,7 +385,32 @@ void renderingText(GLfloat px, GLfloat py){
     glPopMatrix();
 }
 
-
+int signalCount = 0; // To make signals flashing
+void signalsAnimation(string signal ="both"){
+	Symbol* signals = new Symbol();
+	
+	if(signalCount>=20 && signalCount<=40 && !isCarBooting){
+		
+		if(signal=="left" || signal == "both")
+			signals->drawLeftSignal(_WIDTH/2,_HEIGHT/2-215);
+		if(signal=="right"|| signal == "both")
+			signals->drawRightSignal(_WIDTH/2,_HEIGHT/2-215);
+	}else if(isCarBooting){
+		
+		if(signal=="left" || signal == "both")
+			signals->drawLeftSignal(_WIDTH/2,_HEIGHT/2-215);
+		if(signal=="right"|| signal == "both")
+			signals->drawRightSignal(_WIDTH/2,_HEIGHT/2-215);
+	}
+	
+	//Reset countdown
+	if(signalCount >= 40)
+		signalCount =0;
+	else
+		signalCount+=1;
+	
+	delete signals;
+}
 
 void carDashboard(){
 	GLfloat px = _WIDTH/2;
@@ -372,24 +438,27 @@ void carDashboard(){
 	//Accelerometer Configuration 
 	accelerometer->setBackgroundColor(THEME_R,THEME_G,THEME_B);
 	accelerometer->setPosition(px+300,py+15);
-	accelerometer->accProgress = 0;
+	accelerometer->accProgress = -70; //Set variable here !!!
 	
 	if(isCarStarted || isCarBooting)
 		accelerometer->status = true;
-	
 	else accelerometer->status = false;
 	accelerometer->display();
 	
 	if(isCarBooting)
-		symbols->drawSignals(px,py-15);
+		signalsAnimation();   //Parameter: left, right, both
+	else if(isCarStarted)
+		signalsAnimation();
+		
 		
 	
 	if(isCarStarted || isCarBooting){
-	
+		accelerometer->displayGear("N");  //Parameter: N, R, D4
+		
 		//if set GPS
 			//gps(px,py,true);
 		//else	
-			gps(px,py,false);
+			gps(px,py,true);
 		glColor3f(0.4f,1,1);
 		symbols->drawCoolantSymbol(px+300,py+155.5f);
 	}
