@@ -44,6 +44,7 @@ GLfloat decceleration = 0.0f;
 
 GLint speed = 0;//in KM/H
 GLfloat speed_float = 0.0f;
+float speed_meter = 0;
 GLfloat distanceTravel = 14750.0f; //in KM
 
 GLfloat px = (_WIDTH/2)-280;
@@ -56,7 +57,7 @@ bool isGPSSet = false;
 GLfloat yNavVel = 10;
 GLfloat navline = 160;
 GLboolean isMove = false; //default = true
-GLfloat distanceRemaining = 756; //default = 756
+GLfloat distanceRemaining = 800; //default = 756
 
 string int2StringConvert(GLint value){
 	//Convert int to string
@@ -179,7 +180,7 @@ void accelerationCalculate(){
 	}
 	
 	//change position of the speedometer's needel
-	//if(isGPSSet)
+	if(isGPSSet)
 		pointerAng = pointerAng_temp;
 	
 	speed = 359 - pointerAng;
@@ -237,8 +238,8 @@ void gps(GLfloat px, GLfloat py,GLboolean isGPSSet){
 	speed_float = static_cast<float>(speed);
 	speed_float = (speed_float/100) * 0.5;
 	
-	//if(reverseGearFlag) //got problem!!!
-	//	speed_float *= -1;
+	if(reverseGearFlag) //got problem!!!
+		speed_float *= -1;
 	
 	if(isMove)
 	{
@@ -256,13 +257,13 @@ void gps(GLfloat px, GLfloat py,GLboolean isGPSSet){
 	its position is at the road intersection position above the map. 
 	The road intersection starts moving with cyan navigation
 	*/
-	if(distanceRemaining==220)
-		isMove = true;
+	//if(distanceRemaining==220)
+	//	isMove = true;
 	if(distanceRemaining <=160)
 		//navline-=1;
 		navline = navline - speed_float; //length of cyan line decreassing in nav
 		
-	if(distanceRemaining>=0)
+	if(distanceRemaining>=0) // && isGPSSet)
 		//distanceRemaining-=1;
 		distanceRemaining = distanceRemaining - speed_float;
 	else{
@@ -328,8 +329,10 @@ void bottomBar(GLfloat cx, GLfloat cy){
 	
 	
 	//Set speed at here!!!
+	speed_meter = (static_cast<float>(speed)/359.0f) * 321.0f; //Speed Value (0KM/H - 240KM/H)
+	
 	if(isCarStarted || isCarBooting)
-		btmbar->drawSpeedText(122);
+		btmbar->drawSpeedText(static_cast<int>(speed_meter));
 	
 
 		
@@ -354,7 +357,8 @@ void bottomBar(GLfloat cx, GLfloat cy){
 	}
 	
 	//If car is started
-	if(isCarStarted || isCarBooting){
+	if((isCarStarted || isCarBooting) && !isGPSSet){
+		glColor3ub(255, 255, 255);
 		drawText("!", 1, cx+117, cy-135, GLUT_BITMAP_HELVETICA_18,1);
 		glColor3ub(240,80,68);
 		symbols->drawBreakAlert(px+120,py-130);
@@ -462,7 +466,10 @@ void carDashboard(){
 	accelerometer->setPosition(px+300,py+15);
 	
 	if(isCarStarted)
-		accelerometer->accProgress = -10 + speed_float * -85;//default = -70; //Set variable here !!!
+		if(!reverseGearFlag)
+			accelerometer->accProgress = -10 + speed_float * -85;//default = -70; //Set variable here !!!
+		else
+			accelerometer->accProgress = -10 + speed_float * 85;
 	else
 		accelerometer->accProgress = 0;
 	
