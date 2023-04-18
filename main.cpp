@@ -568,7 +568,14 @@ void render(){
 	glFlush();
 	glFinish();
 }
-
+void resetDashboard(){
+	isCarBooting = false;
+	isCarStarted = false;
+	isGPSSet = false;
+	isMove = false;
+	pointerAng = 359;
+	navline = 160;
+}
 
 void onKeyboardReleased(unsigned char key, GLint x, GLint y){
 	switch(key){
@@ -605,9 +612,23 @@ void onKeyboardPressed(unsigned char key, GLint x, GLint y){
 			else
 				rightSignalFlag = true;
 			break;
-		case 'l': case 'L': isGPSSet = true;
+		case 'l': case 'L': 
+			if(!isGPSSet) isGPSSet = true;
+			else{
+				isGPSSet = false;
+			}
+			
+			if(navline==0 && isGPSSet){
+				navline = 160;
+				distanceRemaining = 800;
+			}
 			break;
-		case 'o': case 'O': isCarBooting = true;
+		case 'o': case 'O': 
+			if(!isCarStarted)
+				isCarBooting = true;
+			else
+				resetDashboard();
+			
 			break;
 		case 'p': case 'P': // Refill fuel
 			break;

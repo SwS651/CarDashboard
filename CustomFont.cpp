@@ -82,7 +82,7 @@ void CustomFont::draw0(GLfloat px,GLfloat py){
 //	glColor3f(0.01569f,0.14902f,0.30196f);
 //	drawEllipse(cx,cy+17, 7.5f, 14.0f);
 	glPushMatrix();
-		glColor3f(1,0,0);
+		glColor3f(this->r,this->g,this->b);
 		drawEllipse(px+15,py+18, 13.5f, 20.0f);
 		glColor3f(0.01569f,0.14902f,0.30196f);
 		drawEllipse(px+15,py+18, 7.5f, 15.0f);
@@ -91,7 +91,7 @@ void CustomFont::draw0(GLfloat px,GLfloat py){
 
 void CustomFont::draw1(GLfloat px,GLfloat py){
 	glPushMatrix();
-		glColor3f(1,1,0);		
+		glColor3f(this->r,this->g,this->b);		
 		drawRect(px+13,py+26,10,6);
 		drawRect(px+23,py,7,37);
 	glPopMatrix();
@@ -101,7 +101,7 @@ void CustomFont::draw2(GLfloat px,GLfloat py){
 	//2
 	glPushMatrix();
 		setBorderColor(0.01569f,0.14902f,0.30196f);
-		setFilledColor(1,1,1);
+		setFilledColor(this->r,this->g,this->b);
 		setUnfilledColor(0.01569f,0.14902f,0.30196f);
 		rotate(180, px+14,py+24);
 		drawRingedCircle(16,px+14,py+24, 2, 0.5f, 8);
@@ -119,17 +119,17 @@ void CustomFont::draw2(GLfloat px,GLfloat py){
 void CustomFont::draw3(GLfloat px,GLfloat py){
 	glPushMatrix();
 			//setBorderColor(1,1,0);
-			setFilledColor(1,0,0);
+			setBorderColor(0.01569f,0.14902f,0.30196f);
+			setFilledColor(this->r,this->g,this->b);
 			setUnfilledColor(0.01569f,0.14902f,0.30196f);
 			rotate(80, px+16,py+13);
 			drawRingedCircle(16,px+16,py+13, 2, 0.3f, 7);
 			glLoadIdentity();
 			
 			
-			glColor3f(0.01569f,0.14902f,0.30196f);
-			//drawRect(px-5,py+6,10,12);
+
 			
-			glColor3f(1,0,0);
+			glColor3f(this->r,this->g,this->b);
 			drawRect(px+5, py+31, 25, 7);
 			
 			drawRect(px+12, py+18, 6, 8);
@@ -150,7 +150,7 @@ void CustomFont::draw4(GLfloat px,GLfloat py){
 	//4
 	glPushMatrix();
 
-		glColor3f(0.9f,0.9f,0.9f);
+		glColor3f(this->r,this->g,this->b);
 		rotate(52,px+4,py+9);
 		drawRect(px+4,py+9,32,7);
 		glLoadIdentity();
@@ -164,17 +164,18 @@ void CustomFont::draw4(GLfloat px,GLfloat py){
 void CustomFont::draw5(GLfloat px,GLfloat py){
 	
 		glPushMatrix();
-			glColor3f(1,0,0);
+			glColor3f(this->r,this->g,this->b);
 			drawRect(px, py+32, 28, 6);
 			
 			//setBorderColor(1,1,0);
-			setFilledColor(1,0,0);
+			setBorderColor(0.01569f,0.14902f,0.30196f);
+			setFilledColor(this->r,this->g,this->b);
 			setUnfilledColor(0.01569f,0.14902f,0.30196f);
 			rotate(90, px+15,py+12.5f);
 			drawRingedCircle(14.7f,px+15,py+12.5f, 2, 0.5f, 7);
 			glLoadIdentity();
 			
-			glColor3f(1,0,0);
+			glColor3f(this->r,this->g,this->b);
 			drawRect(px,py+18,6,12);
 			drawRect(px+5,py+18,14,7);
 			drawRect(px,py,17,6);
@@ -187,7 +188,7 @@ void CustomFont::draw5(GLfloat px,GLfloat py){
 
 void CustomFont::draw6(GLfloat px,GLfloat py){
 		glPushMatrix();
-			glColor3f(1,0,0);
+			glColor3f(this->r,this->g,this->b);
 			rotate(50,px+6,py+14.5f);
 			drawRect(px+6, py+14.5f, 27, 7);
 			glLoadIdentity();
@@ -203,7 +204,7 @@ void CustomFont::draw6(GLfloat px,GLfloat py){
 
 void CustomFont::draw7(GLfloat px,GLfloat py){
 		glPushMatrix();
-			glColor3f(1,0,0);
+			glColor3f(this->r,this->g,this->b);
 			
 			drawRect(px, py+31, 30, 7);
 			
@@ -215,7 +216,7 @@ void CustomFont::draw7(GLfloat px,GLfloat py){
 }
 void CustomFont::draw8(GLfloat px,GLfloat py){
 	glPushMatrix();
-		glColor3f(1,0,0);
+		glColor3f(this->r,this->g,this->b);
 		
 		drawSolidCircle(11,px+15,py+26,1);
 		drawSolidCircle(13,px+15,py+13,1);
@@ -230,7 +231,7 @@ void CustomFont::draw8(GLfloat px,GLfloat py){
 void CustomFont::draw9(GLfloat px,GLfloat py){
 	
 	glPushMatrix();
-		glColor3f(1,0,0);
+		glColor3f(this->r,this->g,this->b);
 		//rotate(62,cx+12,cy);
 		drawRect(px+21, py, 6, 38);
 		glLoadIdentity();

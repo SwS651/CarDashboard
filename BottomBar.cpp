@@ -114,6 +114,7 @@ void BottomBar::drawSpeedText(int n){
 	glPushMatrix();
 	
 	CustomFont* number = new CustomFont();
+	number->setFontColor(1,1,1);
 	number->setPosition(cx,cy);
 	number->setFontText(cx,cy,num.str());
 	
