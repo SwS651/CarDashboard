@@ -22,6 +22,10 @@ public:
     void drawTriangle(GLfloat cx,GLfloat cy,GLfloat size);
     void drawRightTriangle(GLfloat cx, GLfloat cy, GLfloat size);
     void drawSolidCircle(GLfloat r,GLfloat px, GLfloat py,GLfloat thickness);
+    void drawQuad(GLfloat x1, GLfloat y1,
+				  GLfloat x2, GLfloat y2,
+				  GLfloat x3, GLfloat y3,
+				  GLfloat x4, GLfloat y4);
     
     
     void drawRingedCircle(GLfloat radius,GLfloat cx,GLfloat cy, GLfloat thickness, GLfloat progress, GLfloat emptyRadius);

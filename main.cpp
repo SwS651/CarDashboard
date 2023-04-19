@@ -17,6 +17,8 @@ using namespace std;
 const int _WIDTH = 1200;
 const int _HEIGHT = 720;
 
+
+
 GLfloat THEME_R = 0.01569f;
 GLfloat THEME_G = 0.14902f; 
 GLfloat THEME_B = 0.30196f;
@@ -535,6 +537,81 @@ void carDashboard(){
 	delete symbols;
 	delete dashboard;
 } 
+
+GLfloat car_x = 0;
+
+//Background scene
+void scene1(){
+	//side border
+	glColor3f(0.0f, 0.0f, 0.0f);
+	Object().drawRect(0, 450, 1200, 80);
+	
+	//Road strip
+	glColor3f(1.0f, 1.0f, 1.0f);
+	int rect_width = 40; // Width of each rectangle
+	int rect_height = 5; // Height of each rectangle
+	int gap = 30; // Gap between each rectangle
+	int num_rectangles = 18;
+	
+	for (int i = 0; i < num_rectangles; i++) {
+    int x = 20 + i * (rect_width + gap); // X-coordinate of rectangle
+    int y = 485; // Y-coordinate of rectangle
+    Object().drawRect(x, y, rect_width, rect_height); // Draw rectangle
+	}
+	
+	//Point A
+	glColor3f(0.82f, 0.71f, 0.55f);
+	Object().drawRect(80, 530, 10, 40);
+	
+	glColor3f(0.82f, 0.71f, 0.55f);
+	Object().drawRect(57, 570, 60, 40);
+	
+	glColor3f(1.0f, 1.0f, 1.0f);
+	drawText("A", 1, 80, 584, GLUT_BITMAP_HELVETICA_18,0);
+	
+	//Control Speed of the nav moving
+	speed_float = static_cast<float>(speed);
+	speed_float = speed_float/200;
+	
+	
+	if(isMove)
+	{
+		if(speed>0)
+			car_x = car_x + speed_float;
+		else
+		{
+			
+			isMove=false;
+		}
+	}
+	
+	if (car_x > 1250) {
+		car_x -= 1350;
+	}
+	
+	
+	//-----Car--------
+	glColor3f(1.0f, 0.0f, 0.0f); // Set red brush
+	Object().drawRect(car_x + 80, 480, 55, 25);
+	
+	glColor3f(0.0f, 0.0f, 1.0f);
+	Object().drawSolidCircle(7, car_x + 90, 480, 2);
+	
+	glColor3f(0.0f, 0.0f, 1.0f);
+	Object().drawSolidCircle(7, car_x + 122, 480, 2);
+	
+	glColor3f(1.0f, 1.0f, 0.5f); // light yellow
+	Object().drawRect(car_x + 133, 490, 5, 10);
+	
+	glColor3f(173.0f/255.0f, 216.0f/255.0f, 230.0f/255.0f);//light blue
+	Object().drawRect(car_x + 92, 500, 30, 8);
+	
+	
+	
+}
+
+
+
 void render(){
 
 	
@@ -552,6 +629,9 @@ void render(){
 	// Render code here
 	//carDashboard(true);
 	carDashboard();
+	
+	//background
+	scene1();
 
 	
 	/****Test CustomFont****/
