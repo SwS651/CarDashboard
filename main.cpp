@@ -17,7 +17,7 @@ using namespace std;
 const int _WIDTH = 1200;
 const int _HEIGHT = 720;
 
-bool Scene2 = false;
+
 
 GLfloat THEME_R = 0.01569f;
 GLfloat THEME_G = 0.14902f; 
@@ -541,6 +541,17 @@ void carDashboard(){
 
 
 //---------------Background scene-----------------
+
+GLfloat car_x = 0;
+int current_scene = 1;
+
+// Define function to switch between scenes
+void switchScene(int scene_number) {
+    current_scene = scene_number;
+}
+
+
+
 void scene1(){
 	//side border
 	glColor3f(0.0f, 0.0f, 0.0f);
@@ -568,6 +579,12 @@ void scene1(){
 	
 	glColor3f(1.0f, 1.0f, 1.0f);
 	drawText("A", 1, 80, 584, GLUT_BITMAP_HELVETICA_18,0);
+	
+	if (car_x > 1200) {
+		switchScene(2);
+		car_x -= 1350;
+	}
+	
 }
 
 void scene2(){
@@ -587,12 +604,49 @@ void scene2(){
     int y = 485; // Y-coordinate of rectangle
     Object().drawRect(x, y, rect_width, rect_height); // Draw rectangle
 	}
+	
+	if (car_x > 1200) {
+		switchScene(3);
+		car_x -= 1350;
+	}
 }
 
 
+void scene3(){
+	//side border
+	glColor3f(0.0f, 0.0f, 0.0f);
+	Object().drawRect(0, 450, 1200, 80);
+	
+	//Road strip
+	glColor3f(1.0f, 1.0f, 1.0f);
+	int rect_width = 40; // Width of each rectangle
+	int rect_height = 5; // Height of each rectangle
+	int gap = 30; // Gap between each rectangle
+	int num_rectangles = 18;
+	
+	for (int i = 0; i < num_rectangles; i++) {
+    int x = 20 + i * (rect_width + gap); // X-coordinate of rectangle
+    int y = 485; // Y-coordinate of rectangle
+    Object().drawRect(x, y, rect_width, rect_height); // Draw rectangle
+	}
+	
+	//Point A
+	glColor3f(0.82f, 0.71f, 0.55f);
+	Object().drawRect(1050, 530, 10, 40);
+	
+	glColor3f(0.82f, 0.71f, 0.55f);
+	Object().drawRect(1025, 570, 60, 40);
+	
+	glColor3f(1.0f, 1.0f, 1.0f);
+	drawText("B", 1, 1050, 584, GLUT_BITMAP_HELVETICA_18,0);
+	
+	if (car_x > 1200) {
+		switchScene(3);
+		car_x -= 1350;
+	}
+	
+}
 
-
-GLfloat car_x = 0;
 
 void car(){
 	//Control Speed of the nav moving
@@ -625,11 +679,6 @@ void car(){
 	glColor3f(173.0f/255.0f, 216.0f/255.0f, 230.0f/255.0f);//light blue
 	Object().drawRect(car_x + 92, 500, 30, 8);
 	
-	
-	if (car_x > 1250) {
-		Scene2 = true;
-		car_x -= 1350;
-	}
 }
 
 
@@ -651,15 +700,17 @@ void render(){
 	//carDashboard(true);
 	carDashboard();
 	
-	//background
-	if (Scene2) {
-    	scene2();
-  	} else {
-    	scene1();
-  	}
+	// Draw the current scene
+    if (current_scene == 1) {
+        scene1();
+    } else if (current_scene == 2) {
+        scene2();
+    } else if (current_scene == 3){
+    	scene3();
+    }
+    
+    //scene3();
 	
-	
-	//scene1();
 	
 	car();
 	
