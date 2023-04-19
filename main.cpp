@@ -17,7 +17,7 @@ using namespace std;
 const int _WIDTH = 1200;
 const int _HEIGHT = 720;
 
-
+bool Scene2 = false;
 
 GLfloat THEME_R = 0.01569f;
 GLfloat THEME_G = 0.14902f; 
@@ -538,9 +538,9 @@ void carDashboard(){
 	delete dashboard;
 } 
 
-GLfloat car_x = 0;
 
-//Background scene
+
+//---------------Background scene-----------------
 void scene1(){
 	//side border
 	glColor3f(0.0f, 0.0f, 0.0f);
@@ -568,7 +568,33 @@ void scene1(){
 	
 	glColor3f(1.0f, 1.0f, 1.0f);
 	drawText("A", 1, 80, 584, GLUT_BITMAP_HELVETICA_18,0);
+}
+
+void scene2(){
+	//side border
+	glColor3f(0.0f, 0.0f, 0.0f);
+	Object().drawRect(0, 450, 1200, 80);
 	
+	//Road strip
+	glColor3f(1.0f, 1.0f, 1.0f);
+	int rect_width = 40; // Width of each rectangle
+	int rect_height = 5; // Height of each rectangle
+	int gap = 30; // Gap between each rectangle
+	int num_rectangles = 18;
+	
+	for (int i = 0; i < num_rectangles; i++) {
+    int x = 20 + i * (rect_width + gap); // X-coordinate of rectangle
+    int y = 485; // Y-coordinate of rectangle
+    Object().drawRect(x, y, rect_width, rect_height); // Draw rectangle
+	}
+}
+
+
+
+
+GLfloat car_x = 0;
+
+void car(){
 	//Control Speed of the nav moving
 	speed_float = static_cast<float>(speed);
 	speed_float = speed_float/200;
@@ -580,16 +606,9 @@ void scene1(){
 			car_x = car_x + speed_float;
 		else
 		{
-			
 			isMove=false;
 		}
 	}
-	
-	if (car_x > 1250) {
-		car_x -= 1350;
-	}
-	
-	
 	//-----Car--------
 	glColor3f(1.0f, 0.0f, 0.0f); // Set red brush
 	Object().drawRect(car_x + 80, 480, 55, 25);
@@ -607,9 +626,11 @@ void scene1(){
 	Object().drawRect(car_x + 92, 500, 30, 8);
 	
 	
-	
+	if (car_x > 1250) {
+		Scene2 = true;
+		car_x -= 1350;
+	}
 }
-
 
 
 void render(){
@@ -631,7 +652,17 @@ void render(){
 	carDashboard();
 	
 	//background
-	scene1();
+	if (Scene2) {
+    	scene2();
+  	} else {
+    	scene1();
+  	}
+	
+	
+	//scene1();
+	
+	car();
+	
 
 	
 	/****Test CustomFont****/
