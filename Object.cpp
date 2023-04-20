@@ -167,6 +167,17 @@ void Object::drawTriangle(GLfloat cx,GLfloat cy,GLfloat size){
 	glPopMatrix();	
 }
 
+void Object::drawCustomRightTriangle(GLfloat cx, GLfloat cy, GLfloat width, GLfloat height){
+    glPushMatrix();
+    glBegin(GL_TRIANGLES);
+        glVertex2i(cx, cy);
+        glVertex2i(cx,cy+ height);
+        glVertex2i(cx+width, cy);
+    glEnd();
+    glPopMatrix();
+} 
+
+
 //Draw a right triangle by setting the center point
 void Object::drawRightTriangle(GLfloat cx, GLfloat cy, GLfloat size){
 	glPushMatrix();

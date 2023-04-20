@@ -20,6 +20,7 @@ public:
     void drawEllipse(GLfloat pX, GLfloat pY, GLfloat radiusW, GLfloat radiusH); 
     void drawRect(GLfloat x,GLfloat y, GLfloat width, GLfloat height);
     void drawTriangle(GLfloat cx,GLfloat cy,GLfloat size);
+    void drawCustomRightTriangle(GLfloat cx, GLfloat cy, GLfloat width, GLfloat height);
     void drawRightTriangle(GLfloat cx, GLfloat cy, GLfloat size);
     void drawSolidCircle(GLfloat r,GLfloat px, GLfloat py,GLfloat thickness);
     void drawQuad(GLfloat x1, GLfloat y1,
