@@ -47,22 +47,34 @@ GLfloat decceleration = 0.0f;
 GLint speed = 0;//in KM/H
 GLfloat speed_float = 0.0f;
 float speed_meter = 0;
-GLfloat distanceTravel = 14750.0f; //in KM
+GLfloat distanceTravel = 147500.0f; //in KM
 
 GLfloat px = (_WIDTH/2)-280;
 GLfloat py = _HEIGHT/2;
 
 bool isCarBooting = false;
 bool isCarStarted = false;
+bool isHandbreakFree = false;
 bool isGPSSet = false;
+bool initGPS = false;
 
 GLfloat yNavVel = 10;
 GLfloat navline = 160;
 GLboolean isMove = false; //default = true
-GLfloat distanceRemaining = 800; //default = 756
+GLfloat distanceRemaining = 3640;//800; //default = 756
 
 string int2StringConvert(GLint value){
 	//Convert int to string
+	stringstream ss;
+	ss << value;
+	
+	string valueStr = ss.str();
+	
+	return valueStr;
+}
+
+string float2StringConvert(GLfloat value){
+	//Convert float to string
 	stringstream ss;
 	ss << value;
 	
@@ -182,11 +194,14 @@ void accelerationCalculate(){
 	}
 	
 	//change position of the speedometer's needel
-	if(isGPSSet)
+	if(isHandbreakFree)//(isGPSSet)
 		pointerAng = pointerAng_temp;
 	
 	speed = 359 - pointerAng;
 	
+	if(speed > 0 && !isHandbreakFree)
+		isHandbreakFree = true;
+
 	if(speed > 0){
 		isMove = true;
 		distanceTravel = distanceTravel + (static_cast<float>(speed)/ 2400); //default: 1000
@@ -223,12 +238,6 @@ void gps(GLfloat px, GLfloat py,GLboolean isGPSSet){
 	gPs->draw();
 	gPs->drawCrossRoad(yNavVel);  
 		
-	if(isGPSSet){
-		gPs->drawNavigation(navline);
-		glColor3f(1,1,1);
-		drawText("7 KM", 4,cx+50, cy-55, GLUT_BITMAP_HELVETICA_18,0);
-	}
-		
 	//GPS Animation here
 	/*
 		Car starts moving.
@@ -263,7 +272,9 @@ void gps(GLfloat px, GLfloat py,GLboolean isGPSSet){
 	//	isMove = true;
 	if(distanceRemaining <=160)
 		//navline-=1;
-		navline = navline - speed_float; //length of cyan line decreassing in nav
+		navline = distanceRemaining;//navline - speed_float; //length of cyan line decreassing in nav
+	else
+		navline = 160;
 		
 	if(distanceRemaining>=0) // && isGPSSet)
 		//distanceRemaining-=1;
@@ -273,6 +284,15 @@ void gps(GLfloat px, GLfloat py,GLboolean isGPSSet){
 		isMove = false;
 	}
 		 
+	if(isGPSSet){
+		gPs->drawNavigation(navline);
+		if(distanceRemaining > 0){
+			glColor3f(1,1,1);
+			//drawText("7 KM", 4,cx+50, cy-55, GLUT_BITMAP_HELVETICA_18,0);
+			drawText(float2StringConvert(distanceRemaining/1000.0f).data(), 4,cx+50, cy-55, GLUT_BITMAP_HELVETICA_18,0);
+			drawText(" KM", 4, cx+85, cy-55, GLUT_BITMAP_HELVETICA_18, 0);
+		}
+	}
 	
 	delete gPs;
 }
@@ -359,7 +379,7 @@ void bottomBar(GLfloat cx, GLfloat cy){
 	}
 	
 	//If car is started
-	if((isCarStarted || isCarBooting) && !isGPSSet){
+	if((isCarStarted || isCarBooting) && !isHandbreakFree){//!isGPSSet){
 		glColor3ub(255, 255, 255);
 		drawText("!", 1, cx+117, cy-135, GLUT_BITMAP_HELVETICA_18,1);
 		glColor3ub(240,80,68);
@@ -387,7 +407,8 @@ void renderingText(GLfloat px, GLfloat py){
 	if(isCarStarted || isCarBooting){
 		glColor3f(1.0f, 1.0f, 1.0f);
 		drawText("KMH", 3, cx-295,cy-70, GLUT_BITMAP_HELVETICA_12,0);
-		drawText(int2StringConvert(distanceTravel).data(), 7,cx-315, cy-135, GLUT_BITMAP_HELVETICA_18,0);
+		string round_distanceTravel = int2StringConvert(round(distanceTravel));
+		drawText(round_distanceTravel.data(), 7,cx-315, cy-135, GLUT_BITMAP_HELVETICA_18,0);
 		
 		glColor3f(1,1,1);
 		drawText("25.0 'C", 7,_WIDTH-280, cy-135, GLUT_BITMAP_HELVETICA_18,0);
@@ -468,10 +489,10 @@ void carDashboard(){
 	accelerometer->setPosition(px+300,py+15);
 	
 	if(isCarStarted)
-		if(!reverseGearFlag)
+		//if(!reverseGearFlag)
 			accelerometer->accProgress = -10 + speed_float * -85;//default = -70; //Set variable here !!!
-		else
-			accelerometer->accProgress = -10 + speed_float * 85;
+		//else
+			//accelerometer->accProgress = -10 + speed_float * 85;
 	else
 		accelerometer->accProgress = 0;
 	
@@ -505,15 +526,26 @@ void carDashboard(){
 		if(isGPSSet){
 			gps(px, py, true);
 			//accelerometer->displayGear("D4");
+			// if(!reverseGearFlag)
+				// accelerometer->displayGear("D4");
+			// else
+				// accelerometer->displayGear("R");
+		}
+		else{
+			gps(px, py, false);
+			//accelerometer->displayGear("N");
+		}
+		
+		if(isHandbreakFree){
 			if(!reverseGearFlag)
 				accelerometer->displayGear("D4");
 			else
 				accelerometer->displayGear("R");
 		}
 		else{
-			gps(px, py, false);
 			accelerometer->displayGear("N");
 		}
+		
 		glColor3f(0.4f,1,1);
 		symbols->drawCoolantSymbol(px+300,py+155.5f);
 	}
@@ -774,8 +806,17 @@ void onKeyboardPressed(unsigned char key, GLint x, GLint y){
 			else
 				rightSignalFlag = true;
 			break;
+		case 'b': case 'B': //handbreak free
+			if(isHandbreakFree)
+				isHandbreakFree = false;
+			else
+				isHandbreakFree = true;
+			break;
 		case 'l': case 'L': 
-			if(!isGPSSet) isGPSSet = true;
+			if(!isGPSSet){ 
+				isGPSSet = true;
+				isHandbreakFree = true;
+			}
 			else{
 				isGPSSet = false;
 			}
