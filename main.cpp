@@ -251,6 +251,9 @@ void gps(GLfloat px, GLfloat py,GLboolean isGPSSet){
 	
 	if(reverseGearFlag) //got problem!!!
 		speed_float *= -1;
+		
+	if(yNavVel>=115)
+		yNavVel = 115;
 	
 	if(isMove)
 	{
@@ -333,8 +336,6 @@ void accelerometer(GLfloat cx, GLfloat cy){
 }
 
 GLint pnn = 0;
-
-
 void bottomBar(GLfloat cx, GLfloat cy){
 	
 	GLfloat px = cx;
@@ -583,10 +584,12 @@ void switchScene(int scene_number) {
     current_scene = scene_number;
 }
 
-void scene1(){
+void staticBackground(){
+	GLfloat py = 350;
+	
 	//side border
 	glColor3f(0.0f, 0.0f, 0.0f);
-	Object().drawRect(0, 450, 1200, 80);
+	Object().drawRect(0, py, 1200, 80);
 	
 	//Road strip
 	glColor3f(1.0f, 1.0f, 1.0f);
@@ -596,38 +599,44 @@ void scene1(){
 	int num_rectangles = 18;
 	
 	for (int i = 0; i < num_rectangles; i++) {
-    int x = 20 + i * (rect_width + gap); // X-coordinate of rectangle
-    int y = 485; // Y-coordinate of rectangle
-    Object().drawRect(x, y, rect_width, rect_height); // Draw rectangle
+	    int x = 20 + i * (rect_width + gap); // X-coordinate of rectangle
+	    int y = 485; // Y-coordinate of rectangle
+	    Object().drawRect(x, py+35, rect_width, rect_height); // Draw rectangle
 	}
+}
+
+void scene1(){
+	GLfloat py = 350;
+	
+	staticBackground();
 	
 	//Point A
 	glColor3f(0.82f, 0.71f, 0.55f);
-	Object().drawRect(80, 530, 10, 40);
+	Object().drawRect(80, py+80, 10, 40);
 	
 	glColor3f(0.82f, 0.71f, 0.55f);
-	Object().drawRect(57, 570, 60, 40);
+	Object().drawRect(57, py+120, 60, 40);
 	
 	glColor3f(1.0f, 1.0f, 1.0f);
-	drawText("A", 1, 80, 584, GLUT_BITMAP_HELVETICA_18,0);
+	drawText("A", 1, 80, py+134, GLUT_BITMAP_HELVETICA_18,0);
 	
 	
 	//trafic light
 	
 	glColor3f(0.0f, 0.0f, 0.0f);
-	Object().drawRect(160, 570, 30, 60);
+	Object().drawRect(160, py+120, 30, 60);
 	
 	glColor3f(0.1f, 0.0f, 0.0f);
-	Object().drawRect(170, 530, 10, 40);
+	Object().drawRect(170, py+80, 10, 40);
 	
 	glColor3f(1.0f, 0.0f, 0.0f);//red
-	Object().drawCircle(5, 175, 618, 1);
+	Object().drawCircle(5, 175, py+168, 1);
 	
 	glColor3f(1.0f, 1.0f, 0.0f);//yellow
-	Object().drawCircle(5, 175, 600, 1);
+	Object().drawCircle(5, 175, py+150, 1);
 	
 	glColor3f(0.0f, 1.0f, 0.0f);//green
-	Object().drawCircle(5, 175, 583, 1);
+	Object().drawCircle(5, 175, py+133, 1);
 	
 
 
@@ -635,11 +644,11 @@ void scene1(){
 	// Red light
     if (lightCount >= 0 && lightCount < 500) {
         glColor3f(1.0f, 0.0f, 0.0f);//red
-		Object().drawSolidCircle(5, 175, 618, 2);
+		Object().drawSolidCircle(5, 175, py+168, 2);
 		
     } else if (lightCount >= 500 && lightCount < 1000){
         glColor3f(0.0f, 1.0f, 0.0f);//green
-		Object().drawSolidCircle(5, 175, 583, 1);
+		Object().drawSolidCircle(5, 175, py+133, 1);
 		
     }
     
@@ -649,10 +658,6 @@ void scene1(){
 	else
 		lightCount+=1;
 	
-    
-    
-	
-	
 	if (car_x > 1200) {
 		switchScene(2);
 		car_x -= 1350;
@@ -660,35 +665,20 @@ void scene1(){
 	
 }
 
-void red(){
-		glColor3f(1.0f, 0.0f, 0.0f);//red
-		Object().drawSolidCircle(5, 175, 618, 2);
-		
-}
+//void red(){
+//		glColor3f(1.0f, 0.0f, 0.0f);//red
+//		Object().drawSolidCircle(5, 175, 618, 2);	
+//}
 
-void green(){
-	glColor3f(0.0f, 1.0f, 0.0f);//green
-	Object().drawSolidCircle(5, 175, 583, 1);
-}
+//void green(){
+//	glColor3f(0.0f, 1.0f, 0.0f);//green
+//	Object().drawSolidCircle(5, 175, 583, 1);
+//}
 	
 	
 void scene2(){
-	//side border
-	glColor3f(0.0f, 0.0f, 0.0f);
-	Object().drawRect(0, 450, 1200, 80);
-	
-	//Road strip
-	glColor3f(1.0f, 1.0f, 1.0f);
-	int rect_width = 40; // Width of each rectangle
-	int rect_height = 5; // Height of each rectangle
-	int gap = 30; // Gap between each rectangle
-	int num_rectangles = 18;
-	
-	for (int i = 0; i < num_rectangles; i++) {
-    int x = 20 + i * (rect_width + gap); // X-coordinate of rectangle
-    int y = 485; // Y-coordinate of rectangle
-    Object().drawRect(x, y, rect_width, rect_height); // Draw rectangle
-	}
+
+ 	staticBackground();
 	
 	if (car_x > 1200) {
 		switchScene(3);
@@ -698,32 +688,18 @@ void scene2(){
 
 
 void scene3(){
-	//side border
-	glColor3f(0.0f, 0.0f, 0.0f);
-	Object().drawRect(0, 450, 1200, 80);
+	GLfloat py = 350;
+	staticBackground();
 	
-	//Road strip
-	glColor3f(1.0f, 1.0f, 1.0f);
-	int rect_width = 40; // Width of each rectangle
-	int rect_height = 5; // Height of each rectangle
-	int gap = 30; // Gap between each rectangle
-	int num_rectangles = 18;
-	
-	for (int i = 0; i < num_rectangles; i++) {
-    int x = 20 + i * (rect_width + gap); // X-coordinate of rectangle
-    int y = 485; // Y-coordinate of rectangle
-    Object().drawRect(x, y, rect_width, rect_height); // Draw rectangle
-	}
-	
-	//Point A
+	//Point B
 	glColor3f(0.82f, 0.71f, 0.55f);
-	Object().drawRect(1050, 530, 10, 40);
+	Object().drawRect(1050, py+80, 10, 40);
 	
 	glColor3f(0.82f, 0.71f, 0.55f);
-	Object().drawRect(1025, 570, 60, 40);
+	Object().drawRect(1025, py+120, 60, 40);
 	
 	glColor3f(1.0f, 1.0f, 1.0f);
-	drawText("B", 1, 1050, 584, GLUT_BITMAP_HELVETICA_18,0);
+	drawText("B", 1, 1050, py+134, GLUT_BITMAP_HELVETICA_18,0);
 	
 	if (car_x > 1200) {
 		switchScene(1);
@@ -739,7 +715,7 @@ void car(){
 	car_speed = static_cast<float>(speed);
 	car_speed = car_speed/80;
 	
-	GLfloat car_y = 480;
+	GLfloat car_y = 380;
 
 
     if(isMove)
@@ -749,8 +725,6 @@ void car(){
         } else{
         	car_x = car_x - car_speed;
         }
-            
-
     }
 	
 	//-----Car--------
@@ -801,24 +775,9 @@ void render(){
     } else if (current_scene == 3){
     	scene3();
     } 
-    
-    //trafic light	
-    
-    
 	
 	car();
-	
-
-	
-	/****Test CustomFont****/
-	//CustomFont* number = new CustomFont();
-	//number->setPosition(_WIDTH/2-70,_HEIGHT/2);
-	//glColor3f(1,0,1);
-	//number->drawRect(_WIDTH/2,_HEIGHT/2,30,38);
-	//number->draw1(_WIDTH/2,_HEIGHT/2);
-	//number->setFontText(_WIDTH/2-260,_HEIGHT/2,"102131415161718191");
-	//delete number;
-	
+		
 	glutSwapBuffers(); //Swap foreground and background frames.
 	glutPostRedisplay(); //update the canvas display
 	glFlush();

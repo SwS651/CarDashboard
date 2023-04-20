@@ -348,19 +348,15 @@ void Accelerometer::displayGear(string gear = ""){
 			glLoadIdentity();
 		glPopMatrix();
 	}
-	
-	
-
 }
 
 
 void Accelerometer::display(){
 	
-	
 	drawCoolantBar();
-	
+
 	if(this->status)
-	drawAccelerometerprogressBar();
+		drawAccelerometerprogressBar();
 		
 	drawAccelerometer();
 	drawFuel();
