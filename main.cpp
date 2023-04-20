@@ -661,19 +661,12 @@ void scene1(){
 	if (car_x > 1200) {
 		switchScene(2);
 		car_x -= 1350;
+	}else if (car_x <= -150){
+		switchScene(3);
+		car_x += 1350;	
 	}
 	
 }
-
-//void red(){
-//		glColor3f(1.0f, 0.0f, 0.0f);//red
-//		Object().drawSolidCircle(5, 175, 618, 2);	
-//}
-
-//void green(){
-//	glColor3f(0.0f, 1.0f, 0.0f);//green
-//	Object().drawSolidCircle(5, 175, 583, 1);
-//}
 	
 	
 void scene2(){
@@ -683,6 +676,9 @@ void scene2(){
 	if (car_x > 1200) {
 		switchScene(3);
 		car_x -= 1350;
+	}else if (car_x <= -150){
+		switchScene(1);
+		car_x += 1350;	
 	}
 }
 
@@ -704,6 +700,9 @@ void scene3(){
 	if (car_x > 1200) {
 		switchScene(1);
 		car_x -= 1350;
+	}else if (car_x <= -150){
+		switchScene(2);
+		car_x += 1350;	
 	}
 	
 }
