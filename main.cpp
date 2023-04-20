@@ -2,6 +2,7 @@
 #include <gl/glut.h>
 #include <string>
 #include <sstream>
+#include <time.h>
 
 #include "Dashboard.h"
 #include "Speedometer.h"
@@ -16,7 +17,6 @@ using namespace std;
 
 const int _WIDTH = 1200;
 const int _HEIGHT = 720;
-
 
 
 GLfloat THEME_R = 0.01569f;
@@ -489,10 +489,10 @@ void carDashboard(){
 	accelerometer->setPosition(px+300,py+15);
 	
 	if(isCarStarted)
-		//if(!reverseGearFlag)
+		if(!reverseGearFlag)
 			accelerometer->accProgress = -10 + speed_float * -85;//default = -70; //Set variable here !!!
-		//else
-			//accelerometer->accProgress = -10 + speed_float * 85;
+		else
+			accelerometer->accProgress = -10 + speed_float * 85;
 	else
 		accelerometer->accProgress = 0;
 	
@@ -576,13 +576,12 @@ void carDashboard(){
 
 GLfloat car_x = 0;
 int current_scene = 1;
+int lightCount = 0;
 
 // Define function to switch between scenes
 void switchScene(int scene_number) {
     current_scene = scene_number;
 }
-
-
 
 void scene1(){
 	//side border
@@ -612,6 +611,48 @@ void scene1(){
 	glColor3f(1.0f, 1.0f, 1.0f);
 	drawText("A", 1, 80, 584, GLUT_BITMAP_HELVETICA_18,0);
 	
+	
+	//trafic light
+	
+	glColor3f(0.0f, 0.0f, 0.0f);
+	Object().drawRect(160, 570, 30, 60);
+	
+	glColor3f(0.1f, 0.0f, 0.0f);
+	Object().drawRect(170, 530, 10, 40);
+	
+	glColor3f(1.0f, 0.0f, 0.0f);//red
+	Object().drawCircle(5, 175, 618, 1);
+	
+	glColor3f(1.0f, 1.0f, 0.0f);//yellow
+	Object().drawCircle(5, 175, 600, 1);
+	
+	glColor3f(0.0f, 1.0f, 0.0f);//green
+	Object().drawCircle(5, 175, 583, 1);
+	
+
+
+	
+	// Red light
+    if (lightCount >= 0 && lightCount < 500) {
+        glColor3f(1.0f, 0.0f, 0.0f);//red
+		Object().drawSolidCircle(5, 175, 618, 2);
+		
+    } else if (lightCount >= 500 && lightCount < 1000){
+        glColor3f(0.0f, 1.0f, 0.0f);//green
+		Object().drawSolidCircle(5, 175, 583, 1);
+		
+    }
+    
+    //Reset countdown
+	if(lightCount >= 1000)
+		lightCount =0;
+	else
+		lightCount+=1;
+	
+    
+    
+	
+	
 	if (car_x > 1200) {
 		switchScene(2);
 		car_x -= 1350;
@@ -619,6 +660,18 @@ void scene1(){
 	
 }
 
+void red(){
+		glColor3f(1.0f, 0.0f, 0.0f);//red
+		Object().drawSolidCircle(5, 175, 618, 2);
+		
+}
+
+void green(){
+	glColor3f(0.0f, 1.0f, 0.0f);//green
+	Object().drawSolidCircle(5, 175, 583, 1);
+}
+	
+	
 void scene2(){
 	//side border
 	glColor3f(0.0f, 0.0f, 0.0f);
@@ -673,45 +726,52 @@ void scene3(){
 	drawText("B", 1, 1050, 584, GLUT_BITMAP_HELVETICA_18,0);
 	
 	if (car_x > 1200) {
-		switchScene(3);
+		switchScene(1);
 		car_x -= 1350;
 	}
 	
 }
 
+GLfloat car_speed;
 
 void car(){
 	//Control Speed of the nav moving
-	speed_float = static_cast<float>(speed);
-	speed_float = speed_float/200;
+	car_speed = static_cast<float>(speed);
+	car_speed = car_speed/80;
 	
+	GLfloat car_y = 480;
+
+
+    if(isMove)
+    {
+        if(!reverseGearFlag){
+            car_x = car_x + car_speed;
+        } else{
+        	car_x = car_x - car_speed;
+        }
+            
+
+    }
 	
-	if(isMove)
-	{
-		if(speed>0)
-			car_x = car_x + speed_float;
-		else
-		{
-			isMove=false;
-		}
-	}
 	//-----Car--------
-	glColor3f(1.0f, 0.0f, 0.0f); // Set red brush
-	Object().drawRect(car_x + 80, 480, 55, 25);
-	
-	glColor3f(0.0f, 0.0f, 1.0f);
-	Object().drawSolidCircle(7, car_x + 90, 480, 2);
-	
-	glColor3f(0.0f, 0.0f, 1.0f);
-	Object().drawSolidCircle(7, car_x + 122, 480, 2);
-	
-	glColor3f(1.0f, 1.0f, 0.5f); // light yellow
-	Object().drawRect(car_x + 133, 490, 5, 10);
-	
-	glColor3f(173.0f/255.0f, 216.0f/255.0f, 230.0f/255.0f);//light blue
-	Object().drawRect(car_x + 92, 500, 30, 8);
+	 glColor3f(1.0f, 0.0f, 0.0f); // Set red brush
+    Object().drawRect(car_x + 80, car_y, 55, 25);
+
+    glColor3f(0.0f, 0.0f, 1.0f);
+    Object().drawSolidCircle(7, car_x + 90, car_y, 2);
+
+    glColor3f(0.0f, 0.0f, 1.0f);
+    Object().drawSolidCircle(7, car_x + 122, car_y, 2);
+
+    glColor3f(1.0f, 1.0f, 0.5f); // light yellow
+    Object().drawRect(car_x + 133, car_y+10, 5, 10);
+
+    glColor3f(173.0f/255.0f, 216.0f/255.0f, 230.0f/255.0f);//light blue
+    Object().drawRect(car_x + 92, car_y+20, 30, 8);
 	
 }
+
+
 
 
 void render(){
@@ -732,6 +792,7 @@ void render(){
 	//carDashboard(true);
 	carDashboard();
 	
+	
 	// Draw the current scene
     if (current_scene == 1) {
         scene1();
@@ -739,10 +800,11 @@ void render(){
         scene2();
     } else if (current_scene == 3){
     	scene3();
-    }
+    } 
     
-    //scene3();
-	
+    //trafic light	
+    
+    
 	
 	car();
 	
@@ -787,6 +849,8 @@ void onKeyboardReleased(unsigned char key, GLint x, GLint y){
 	}
 	glutPostRedisplay();
 }
+
+
 
 void onKeyboardPressed(unsigned char key, GLint x, GLint y){
 	switch(key){
@@ -888,6 +952,7 @@ int main(){
 	glutInitWindowPosition(0, 0);
 	glutCreateWindow("Car Dashboard");
 	glutDisplayFunc(render); // Load render function.
+	
 	
 	glutKeyboardFunc(onKeyboardPressed);
 	glutKeyboardUpFunc(onKeyboardReleased);
