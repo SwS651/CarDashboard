@@ -620,6 +620,30 @@ void scene1(){
 	glColor3f(1.0f, 1.0f, 1.0f);
 	drawText("A", 1, 80, py+134, GLUT_BITMAP_HELVETICA_18,0);
 	
+	//Side road
+	glColor3f(0.0f, 0.0f, 0.0f);
+	Object().drawCustomRightTriangle(800, 400, 100, 500);    
+	Object().rotate(60,920,600);
+	Object().drawRect(790, 405, 50, 200); 	
+	glLoadIdentity();
+	Object().rotate(-60,700,600);
+	Object().drawRect(820, 473, 50, 175);
+	glLoadIdentity();
+	
+	//Road strip - Vertical
+	glColor3f(1.0f, 1.0f, 1.0f);
+	int rect_width2 = 40; // Width of each rectangle
+	int rect_height2 = 5; // Height of each rectangle
+	int gap2 = 30; // Gap between each rectangle
+	int num_rectangles2 = 4;
+	
+	Object().rotate(-85,840,440);
+	for (int i = 0; i < num_rectangles2; i++) {
+    int x = 590 + i * (rect_width2 + gap2); // X-coordinate of rectangle
+    int y = 440; // Y-coordinate of rectangle
+    Object().drawRect(x, y, rect_width2, rect_height2); // Draw rectangle
+	}
+	glLoadIdentity();
 	
 	//trafic light
 	
@@ -672,6 +696,17 @@ void scene1(){
 void scene2(){
 
  	staticBackground();
+ 	
+ 	//Trees
+	for (int i = 0; i < 7; i++) {
+	// Draw tree
+	glColor3f(0.0f, 0.5f, 0.0f);
+	Object().drawTriangle(150 + i*150, 520, 45);
+	Object().drawTriangle(150 + i*150, 550, 33);
+	Object().drawTriangle(150 + i*150, 575, 21);
+	glColor3f(0.36f, 0.25f, 0.20f);
+	Object().drawRect(135 + i*150, 430, 30, 45);
+	}
 	
 	if (car_x > 1200) {
 		switchScene(3);
