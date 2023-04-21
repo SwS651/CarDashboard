@@ -58,7 +58,9 @@ bool isHandbreakFree = false;
 bool isGPSSet = false;
 bool initGPS = false;
 
-GLfloat yNavVel = 10;
+int currentScene = 1;
+
+GLfloat yNavVel = 100;
 GLfloat navline = 160;
 GLboolean isMove = false; //default = true
 GLfloat distanceRemaining = 3640;//800; //default = 756
@@ -125,16 +127,16 @@ void orbit(GLfloat cx,GLfloat cy, GLfloat radius, GLfloat& angle,GLfloat torque,
 		angle = 0.0;
 }
 
+//Need remove
+//void ppp(GLfloat x, GLfloat y,GLint size){
+//	glPushMatrix();
+//	glPointSize(size);
+//	glBegin(GL_POINTS);
+//		glVertex2i(x,y);
 
-void ppp(GLfloat x, GLfloat y,GLint size){
-	glPushMatrix();
-	glPointSize(size);
-	glBegin(GL_POINTS);
-		glVertex2i(x,y);
-
-	glEnd();
-	glPopMatrix();
-}
+//	glEnd();
+//	glPopMatrix();
+//}
 
 void speedoPointer(){
 	if(pFlag)
@@ -247,25 +249,32 @@ void gps(GLfloat px, GLfloat py,GLboolean isGPSSet){
 	
 	//Control Speed of the nav moving
 	speed_float = static_cast<float>(speed);
-	speed_float = (speed_float/100) * 0.5;
+	speed_float = (speed_float/100) * 0.3;
 	
+	//gps	
 	if(reverseGearFlag) //got problem!!!
 		speed_float *= -1;
 		
 	if(yNavVel>=115)
 		yNavVel = 115;
 	
-	if(isMove)
-	{
-		if(yNavVel>=(py-313))
-			//yNavVel-=0.5f;
-			yNavVel = yNavVel - speed_float;
-		else
-		{
-			yNavVel=115;
-			isMove=false;
-		}
-	}
+
+	//Continuous descent if navigation line or Map is in display and car is not in reverse
+	//If a navigation line or intersection is in the display and the car is in reverse, then the intersection is up
+	if(yNavVel>=(py-313) && currentScene == 1 && !reverseGearFlag)
+		yNavVel = yNavVel - speed_float;
+	else if(currentScene == 1 && reverseGearFlag )
+		yNavVel = yNavVel - (speed_float+speed_float);	
+
+	//If the map (intersection) is outside the display and the car is not reversing, currentScene is 1
+	//Then set the intersection to continue below (outside the display)
+	if(yNavVel<=(py-313) && currentScene == 1 && !reverseGearFlag)
+		yNavVel=(py-313);
+		
+	//If currentScene is 1 and the car is reversing, then the intersection keeps going up
+	if(currentScene == 1 && reverseGearFlag )
+		yNavVel = yNavVel + speed_float;
+
 	
 	/*If the remaining distance is equal to this number, 
 	its position is at the road intersection position above the map. 
@@ -609,7 +618,7 @@ void scene1(){
 	GLfloat py = 350;
 	
 	staticBackground();
-	
+	//-200
 	//Point A
 	glColor3f(0.82f, 0.71f, 0.55f);
 	Object().drawRect(80, py+80, 10, 40);
@@ -683,10 +692,12 @@ void scene1(){
 		lightCount+=1;
 	
 	if (car_x > 1200) {
-		switchScene(2);
+		currentScene +=1; //become 2
+		switchScene(currentScene);
 		car_x -= 1350;
 	}else if (car_x <= -150){
-		switchScene(3);
+		currentScene = 3;
+		switchScene(currentScene);
 		car_x += 1350;	
 	}
 	
@@ -709,10 +720,12 @@ void scene2(){
 	}
 	
 	if (car_x > 1200) {
-		switchScene(3);
+		currentScene+=1;
+		switchScene(currentScene);
 		car_x -= 1350;
-	}else if (car_x <= -150){
-		switchScene(1);
+	}else if (car_x <= -150 && currentScene == 2){
+		currentScene-=1;
+		switchScene(currentScene);
 		car_x += 1350;	
 	}
 }
@@ -732,11 +745,13 @@ void scene3(){
 	glColor3f(1.0f, 1.0f, 1.0f);
 	drawText("B", 1, 1050, py+134, GLUT_BITMAP_HELVETICA_18,0);
 	
-	if (car_x > 1200) {
-		switchScene(1);
+	if (car_x > 1200 && currentScene == 3) {
+		currentScene = 1;
+		switchScene(currentScene);
 		car_x -= 1350;
 	}else if (car_x <= -150){
-		switchScene(2);
+		currentScene -=1;
+		switchScene(currentScene);
 		car_x += 1350;	
 	}
 	
@@ -777,6 +792,15 @@ void car(){
     glColor3f(173.0f/255.0f, 216.0f/255.0f, 230.0f/255.0f);//light blue
     Object().drawRect(car_x + 92, car_y+20, 30, 8);
 	
+	
+	//These code are related to GPS() 
+	//If position x of car more than 119, then set it to py-314 (bottom)
+	if(car_x == 1119)
+		yNavVel = py-314;
+	
+	//If the car enters scene 1, reset the GPS map to the top
+	if(car_x<=-146 && currentScene == 1)
+		yNavVel = 115;
 }
 
 
