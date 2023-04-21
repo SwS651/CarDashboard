@@ -27,6 +27,7 @@ GLfloat BG_R = 0.0118f;
 GLfloat BG_G = 0.098f; 
 GLfloat BG_B = 0.2f;
 
+
 GLfloat angle = 0.0f;
 
 GLfloat rotateAngle = 0;  //start from 158 degree
@@ -586,7 +587,9 @@ void carDashboard(){
 
 GLfloat car_x = 0;
 int current_scene = 1;
-int lightCount = 0;
+int lightCount = 0;  //For
+GLfloat sunsize = 8;
+bool sunEnlarge = true;
 
 // Define function to switch between scenes
 void switchScene(int scene_number) {
@@ -596,22 +599,59 @@ void switchScene(int scene_number) {
 void staticBackground(){
 	GLfloat py = 350;
 	
-	//side border
+	
+	//the Sky
+	glColor3f(0.5294f,0.8078f,0.9216f);
+	Object().drawRect(0,600,1200,300);
+	//Ground
+	glColor3f(0.2,0.5,0);
+	Object().drawRect(0,400,1200,185);
+	
+	//second road(
+	glColor3f(0.0f, 0.0f, 0.0f);
+	Object().drawRect(0, 580, 1200, 15);
+	//side border (Main road)
 	glColor3f(0.0f, 0.0f, 0.0f);
 	Object().drawRect(0, py, 1200, 80);
 	
 	//Road strip
 	glColor3f(1.0f, 1.0f, 1.0f);
-	int rect_width = 40; // Width of each rectangle
-	int rect_height = 5; // Height of each rectangle
 	int gap = 30; // Gap between each rectangle
 	int num_rectangles = 18;
 	
 	for (int i = 0; i < num_rectangles; i++) {
-	    int x = 20 + i * (rect_width + gap); // X-coordinate of rectangle
+	    int x = 20 + i * (40 + gap); // X-coordinate of rectangle
 	    int y = 485; // Y-coordinate of rectangle
-	    Object().drawRect(x, py+35, rect_width, rect_height); // Draw rectangle
+	    Object().drawRect(x, py+35, 40, 5); // Draw rectangle
 	}
+	
+	
+
+	
+	//the Sun 
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glEnable(GL_BLEND);
+	glColor4f(1,1,0,0.53f);
+	Object().drawSolidCircle(sunsize,20,690,1);
+	glLoadIdentity();
+	glColor3f(1,1,0);
+	Object().drawSolidCircle(7,20,690,1);
+	
+	if(sunsize>=12)
+		sunEnlarge = false;
+	if(sunsize<=8)
+		sunEnlarge = true;
+
+		
+	if(sunEnlarge)
+		sunsize +=0.1;
+	else
+		sunsize -=0.1;
+	
+	//white Road line
+	glColor3f(1.0f, 1.0f, 1.0f);
+	Object().drawRect(0,426,610,3);
+	Object().drawRect(1090,426,110,3);
 }
 
 void scene1(){
@@ -631,31 +671,30 @@ void scene1(){
 	
 	//Side road
 	glColor3f(0.0f, 0.0f, 0.0f);
-	Object().drawCustomRightTriangle(800, 400, 100, 500);    
-	Object().rotate(60,920,600);
-	Object().drawRect(790, 405, 50, 200); 	
+	Object().drawCustomRightTriangle(800, 400, 100, 200);    
+	Object().rotate(75,930,580);
+	Object().drawRect(800, 385, 30, 265); 	
 	glLoadIdentity();
-	Object().rotate(-60,700,600);
-	Object().drawRect(820, 473, 50, 175);
+	Object().rotate(-70,680,582);
+	Object().drawRect(800, 455, 30, 210);
 	glLoadIdentity();
 	
 	//Road strip - Vertical
 	glColor3f(1.0f, 1.0f, 1.0f);
 	int rect_width2 = 40; // Width of each rectangle
 	int rect_height2 = 5; // Height of each rectangle
-	int gap2 = 30; // Gap between each rectangle
-	int num_rectangles2 = 4;
+	int gap2 = 1; // Gap between each rectangle
+	int num_rectangles2 = 3;
 	
-	Object().rotate(-85,840,440);
+	Object().rotate(104,840,450);
 	for (int i = 0; i < num_rectangles2; i++) {
-    int x = 590 + i * (rect_width2 + gap2); // X-coordinate of rectangle
-    int y = 440; // Y-coordinate of rectangle
-    Object().drawRect(x, y, rect_width2, rect_height2); // Draw rectangle
+	    int x = 840 + i * (rect_width2 + gap2); // X-coordinate of rectangle
+	    int y = 450; // Y-coordinate of rectangle
+	    Object().drawRect(x, y, 20, 5); // Draw rectangle
 	}
 	glLoadIdentity();
 	
 	//trafic light
-	
 	glColor3f(0.0f, 0.0f, 0.0f);
 	Object().drawRect(160, py+120, 30, 60);
 	
@@ -672,7 +711,15 @@ void scene1(){
 	Object().drawCircle(5, 175, py+133, 1);
 	
 
-
+	//Traffic barriers
+	glColor3f(0.7,0.7,0.7); 
+	Object().drawRect(705,425,280,3); 
+	Object().drawRect(705,440,280,3); 
+	
+	for(int i=0;i<28;i++){
+		Object().drawRect(707+(i*10),428,3,10);
+	}
+	
 	
 	// Red light
     if (lightCount >= 0 && lightCount < 500) {
@@ -707,16 +754,18 @@ void scene1(){
 void scene2(){
 
  	staticBackground();
- 	
+ 	//white Road line
+	glColor3f(0.4314f, 0.1490f, 0.0549f);
+	Object().drawRect(0,426,1200,3);
  	//Trees
 	for (int i = 0; i < 7; i++) {
-	// Draw tree
-	glColor3f(0.0f, 0.5f, 0.0f);
-	Object().drawTriangle(150 + i*150, 520, 45);
-	Object().drawTriangle(150 + i*150, 550, 33);
-	Object().drawTriangle(150 + i*150, 575, 21);
-	glColor3f(0.36f, 0.25f, 0.20f);
-	Object().drawRect(135 + i*150, 430, 30, 45);
+		// Draw tree
+		glColor3f(0.0f, 0.3f, 0.0f);
+		Object().drawTriangle(150 + i*150, 520, 45);
+		Object().drawTriangle(150 + i*150, 550, 33);
+		Object().drawTriangle(150 + i*150, 575, 21);
+		glColor3f(0.36f, 0.25f, 0.20f);
+		Object().drawRect(135 + i*150, 430, 30, 45);
 	}
 	
 	if (car_x > 1200) {
@@ -734,7 +783,8 @@ void scene2(){
 void scene3(){
 	GLfloat py = 350;
 	staticBackground();
-	
+	glColor3f(1,1,1);
+	Object().drawRect(0,426,1200,3);
 	//Point B
 	glColor3f(0.82f, 0.71f, 0.55f);
 	Object().drawRect(1050, py+80, 10, 40);
