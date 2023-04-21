@@ -158,17 +158,6 @@ void Speedometer::circlePoint(){
 		drawSolidCircle(12,cx-85,cy-95,1); //->
 		glLoadIdentity();
 		
-		
-		////Pointer: transparent circle and filled circle
-//		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-//		glEnable(GL_BLEND);
-//		glColor4f(0.4f,1.0f,1.0f,0.53f);
-//		drawSolidCircle(22,cx+40,cy+116,1);  //->
-//		glLoadIdentity();
-//		
-//		glColor3f(1.0f,1.0f,1.0f);
-//		drawSolidCircle(12,cx+40,cy+116,1); //->
-//		glLoadIdentity();
 	glPopMatrix();
 
 }

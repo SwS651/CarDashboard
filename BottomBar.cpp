@@ -60,14 +60,10 @@ void BottomBar::drawSpeedText(int n){
 	
 	GLint cx = this->cx-280;
 	
-	//calculate the center position of speed text
-	//if((num.str()).length()==1)
-		cx -=(30*(num.str()).length()/2);
+
+	cx -=(30*(num.str()).length()/2);
 	
-//	if((num.str()).length()==2)
-//		cx -= (30*2/2);
-//	if((num.str()).length()==3)
-//		cx -= (3*30/2);
+
 		
 	GLint cy = this->cy-112;
 	glColor3f(1,1,1);

@@ -128,17 +128,6 @@ void orbit(GLfloat cx,GLfloat cy, GLfloat radius, GLfloat& angle,GLfloat torque,
 		angle = 0.0;
 }
 
-//Need remove
-//void ppp(GLfloat x, GLfloat y,GLint size){
-//	glPushMatrix();
-//	glPointSize(size);
-//	glBegin(GL_POINTS);
-//		glVertex2i(x,y);
-
-//	glEnd();
-//	glPopMatrix();
-//}
-
 void speedoPointer(){
 	if(pFlag)
 		pointerAng+=1;

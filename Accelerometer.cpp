@@ -42,17 +42,6 @@ void Accelerometer::drawAccelerometerprogressBar(){
 		8	= -122 and above
 	*/
 	
-	//glPushMatrix();
-//		//rotate(-26,cx,cy);
-//		rotate(accProgress,cx,cy);
-//		//progress bar (cyan color)	
-//		setBorderColor(this->BG_R,this->BG_G,this->BG_B);
-//		setFilledColor(0.5608f, 0.9294f, 0.9373f);
-//		setUnfilledColor(this->BG_R,this->BG_G,this->BG_B);
-//		rotate(47, cx,cy); //small number, progress bar increase
-//		drawRingedCircle(105,cx,cy, 1, 0.5f, 88);
-//	glPopMatrix();
-//	glLoadIdentity();
 	
 	glPushMatrix();
 		rotate(50,cx,cy);
