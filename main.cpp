@@ -772,10 +772,12 @@ void scene2(){
 		currentScene+=1;
 		switchScene(currentScene);
 		car_x -= 1350;
+		yNavVel = 155;
 	}else if (car_x <= -150 && currentScene == 2){
 		currentScene-=1;
 		switchScene(currentScene);
 		car_x += 1350;	
+		yNavVel = -155;
 	}
 }
 
@@ -799,10 +801,12 @@ void scene3(){
 		currentScene = 1;
 		switchScene(currentScene);
 		car_x -= 1350;
+		yNavVel = 155;
 	}else if (car_x <= -150){
 		currentScene -=1;
 		switchScene(currentScene);
 		car_x += 1350;	
+		yNavVel = -155;
 	}
 	
 }
@@ -843,14 +847,8 @@ void car(){
     Object().drawRect(car_x + 92, car_y+20, 30, 8);
 	
 	
-	//These code are related to GPS() 
-	//If position x of car more than 119, then set it to py-314 (bottom)
-	if(car_x == 1119)
-		yNavVel = py-314;
-	
-	//If the car enters scene 1, reset the GPS map to the top
-	if(car_x<=-146 && currentScene == 1)
-		yNavVel = 115;
+
+
 }
 
 
