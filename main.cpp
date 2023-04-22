@@ -270,7 +270,7 @@ void gps(GLfloat px, GLfloat py,GLboolean isGPSSet){
 	its position is at the road intersection position above the map. 
 	The road intersection starts moving with cyan navigation
 	*/
-	//if(distanceRemaining==220)
+
 	//	isMove = true;
 	if(distanceRemaining <=160)
 		//navline-=1;
@@ -468,10 +468,6 @@ void carDashboard(){
 	Symbol* symbols = new Symbol();
 	
 	
-	//Car started, 
-	//isCarStarted = true;
-	//isCarBooting = false;
-	
 	//If car is started, then booting state change to false
 	if(isCarStarted && isCarBooting){
 		Sleep(1000); //Set Delay 1 second
@@ -504,37 +500,21 @@ void carDashboard(){
 	if(isCarBooting)
 		signalsAnimation();   //Parameter: left, right, both
 	else if(isCarStarted){
-		//signalsAnimation();
-		if(leftSignalFlag){
+		if(leftSignalFlag)
 			signalsAnimation("left");
-		}
-		if(rightSignalFlag){
+		if(rightSignalFlag)
 			signalsAnimation("right");
-		}
-		if(leftSignalFlag && rightSignalFlag){
+		if(leftSignalFlag && rightSignalFlag)
 			signalsAnimation("both");
-		}
 	}
 	
 	if(isCarStarted || isCarBooting){
-		//accelerometer->displayGear("N");  //Parameter: N, R, D4
-		
-		//if set GPS
-			//gps(px,py,true);
-		//else	
-			//gps(px,py,true);
-		if(isGPSSet){
+
+		if(isGPSSet)
 			gps(px, py, true);
-			//accelerometer->displayGear("D4");
-			// if(!reverseGearFlag)
-				// accelerometer->displayGear("D4");
-			// else
-				// accelerometer->displayGear("R");
-		}
-		else{
+		else
 			gps(px, py, false);
-			//accelerometer->displayGear("N");
-		}
+
 		
 		if(isHandbreakFree){
 			if(!reverseGearFlag)
@@ -858,7 +838,6 @@ void render(){
 	
 	
 	// Render code here
-	//carDashboard(true);
 	carDashboard();
 	
 	
