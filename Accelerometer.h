@@ -8,14 +8,23 @@ class Accelerometer : public Object{
 		~Accelerometer();
 		void setBackgroundColor(GLfloat r,GLfloat g,GLfloat b);
 		void setPosition(GLint px,GLint py);
+		void drawAccelerometerprogressBar();
+		void drawAccelerometerPointer();
 		void drawAccelerometer();
 		void drawCoolantBar();
-		void drawGearText();
-		void draw();
+		void drawFuel();
+		
+		void drawMiddleRedAreaRing();
+		void displayGear(string gear);
+		void display();
+
 	
 	protected:
 		GLfloat BG_R,BG_G,BG_B;
 		GLint cx,cy;
+	public:
+		GLfloat accProgress;
+		GLfloat status;
 };
 
 #endif

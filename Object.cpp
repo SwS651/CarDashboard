@@ -167,6 +167,17 @@ void Object::drawTriangle(GLfloat cx,GLfloat cy,GLfloat size){
 	glPopMatrix();	
 }
 
+void Object::drawCustomRightTriangle(GLfloat cx, GLfloat cy, GLfloat width, GLfloat height){
+    glPushMatrix();
+    glBegin(GL_TRIANGLES);
+        glVertex2i(cx, cy);
+        glVertex2i(cx,cy+ height);
+        glVertex2i(cx+width, cy);
+    glEnd();
+    glPopMatrix();
+} 
+
+
 //Draw a right triangle by setting the center point
 void Object::drawRightTriangle(GLfloat cx, GLfloat cy, GLfloat size){
 	glPushMatrix();
@@ -184,7 +195,7 @@ void Object::drawSector(GLfloat radius, GLfloat cx,GLfloat cy, GLfloat startAngl
 	int numSegments = 50;
 	int lineWidth = 4;
     // Set the color for the sector
-    glColor3f(1.0f, 0.0f, 0.0f); // red
+    //glColor3f(1.0f, 0.0f, 0.0f); // red
 
     // Calculate the center of the sector
     // Set the start and end angles in radians
@@ -195,6 +206,9 @@ void Object::drawSector(GLfloat radius, GLfloat cx,GLfloat cy, GLfloat startAngl
     float angleInc = (endAngleRad - startAngleRad) / numSegments;
 
 	glPushMatrix();
+	
+	
+	
     glLineWidth(lineWidth);
     glColor3f(this->borderR,this->borderB,this->borderG);
     glBegin(GL_LINE_STRIP);
@@ -205,9 +219,11 @@ void Object::drawSector(GLfloat radius, GLfloat cx,GLfloat cy, GLfloat startAngl
 	        glVertex2f(x, y);
 	    }
     glEnd();
-
-
-	glColor3f(this->filledR,this->filledB,this->filledG);
+	glPopMatrix();
+	
+	
+	glPushMatrix();
+    glColor3f(this->filledR,this->filledB,this->filledG);
     // Begin drawing the sector using GL_TRIANGLE_FAN
     glBegin(GL_TRIANGLE_FAN);
 	    // Add the center vertex
@@ -221,7 +237,7 @@ void Object::drawSector(GLfloat radius, GLfloat cx,GLfloat cy, GLfloat startAngl
 	    }
 	// End drawing the sector
     glEnd();
-    
+   
     glPopMatrix();
     
     
@@ -259,6 +275,21 @@ void Object::drawCircleProgress(GLfloat cx, GLfloat cy,GLfloat r, float progress
         glVertex2f(x, y);
     }
     glEnd();
+}
+
+
+void Object::drawQuad(GLfloat x1, GLfloat y1,
+					  GLfloat x2, GLfloat y2,
+					  GLfloat x3, GLfloat y3,
+					  GLfloat x4, GLfloat y4){
+	glPushMatrix();
+	glBegin(GL_QUADS);
+		glVertex2i(x1, y1);
+		glVertex2i(x2, y2);
+		glVertex2i(x3, y3);
+		glVertex2i(x4, y4);
+	glEnd();
+	glPopMatrix();	
 }
 
 

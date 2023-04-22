@@ -1,5 +1,5 @@
 [Project]
-FileName=CarDashboard1.dev
+FileName=CarDashboard2.dev
 Name=CarDashboard2
 Type=0
 Ver=2
@@ -29,7 +29,7 @@ IncludeVersionInfo=0
 SupportXPThemes=0
 CompilerSet=0
 CompilerSettings=0000000000000000001000000
-UnitCount=15
+UnitCount=17
 
 [VersionInfo]
 Major=1
@@ -192,6 +192,26 @@ BuildCmd=
 
 [Unit15]
 FileName=Dashboard.h
+CompileCpp=1
+Folder=
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit16]
+FileName=CustomFont.cpp
+CompileCpp=1
+Folder=
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit17]
+FileName=CustomFont.h
 CompileCpp=1
 Folder=
 Compile=1

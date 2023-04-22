@@ -10,7 +10,7 @@ class BottomBar : public Object{
 		void setBackgroundColor(GLfloat r,GLfloat g,GLfloat b);
 		void setPosition(GLint px,GLint py);
 		void drawBottomBar();
-		void drawSpeedText();
+		void drawSpeedText(int number);
 		void draw();
 	
 	protected:

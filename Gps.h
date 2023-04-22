@@ -9,6 +9,8 @@ class Gps : public Object{
 		void setRoadColor(GLfloat r,GLfloat g,GLfloat b);
 		void setPosition(GLint px,GLint py);
 		void drawGPS();
+		void drawCrossRoad(GLfloat yVel);
+		void drawNavigation(GLfloat navLine);
 		void draw();
 	
 	protected:

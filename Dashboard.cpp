@@ -1,10 +1,11 @@
 #include "Dashboard.h"
 Dashboard::Dashboard(){}
 Dashboard::~Dashboard(){} 
-void Dashboard::setColor(GLfloat r,GLfloat g,GLfloat b){
+void Dashboard::setColor(GLfloat r,GLfloat g,GLfloat b,GLfloat alpha){
 	this->r = r;
 	this->g = g;
 	this->b = b;
+	this->alpha = alpha;
 }
 
 void Dashboard::setPosition(GLint px,GLint py){
@@ -15,7 +16,10 @@ void Dashboard::setPosition(GLint px,GLint py){
 void Dashboard::drawDashboard(GLfloat cx, GLfloat cy){
 	
 
-	glColor3f(this->r,this->g,this->b);
+
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glEnable(GL_BLEND);
+	glColor4f(this->r,this->g,this->b,this->alpha);
     glBegin(GL_TRIANGLE_STRIP);
 
 	    // Draw the vertices

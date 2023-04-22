@@ -1,4 +1,7 @@
 #include "BottomBar.h"
+#include "CustomFont.h"
+ 
+#include<sstream>  
 BottomBar::BottomBar(){}
 BottomBar::~BottomBar(){}
 void BottomBar::setBackgroundColor(GLfloat r,GLfloat g,GLfloat b){
@@ -18,6 +21,12 @@ void BottomBar::drawBottomBar(){
 	
 	//BorderLine
 	glPushMatrix();
+		
+		//hidden place for GPS
+		glColor3f(this->BG_R,this->BG_G,this->BG_B);
+		drawRect(cx-60,cy+120,160,70);//Top
+		drawRect(cx-60,cy-107,160,26);//Bottom
+		
 		glColor3f(1,1,1);
 		drawLine(px-400,py-149,px-328,py-49,5);
 		drawLine(px-328,py-49,px-230,py-49,5);
@@ -43,45 +52,36 @@ void BottomBar::drawBottomBar(){
 	glPopMatrix();
 	glLoadIdentity();
 }
-void BottomBar::drawSpeedText(){
+
+void BottomBar::drawSpeedText(int n){
+	ostringstream num;
+	num<<n;
 	
-	GLint cx = this->cx-290;
+	
+	GLint cx = this->cx-280;
+	
+
+	cx -=(30*(num.str()).length()/2);
+	
+
+		
 	GLint cy = this->cy-112;
 	glColor3f(1,1,1);
 	glPushMatrix();
 	
-		//1
-		drawRect(cx-27,cy+25,10,6);
-		drawRect(cx-22,cy-1,5,34);
+	CustomFont* number = new CustomFont();
+	number->setFontColor(1,1,1);
+	number->setPosition(cx,cy);
+	number->setFontText(cx,cy,num.str());
+	
 		
 		
-		//drawRect(cx,cy,5,30);
-		
-		
-		//2
-		setBorderColor(this->BG_R,this->BG_G,this->BG_B);
-		setFilledColor(1,1,1);
-		setUnfilledColor(this->BG_R,this->BG_G,this->BG_B);
-		rotate(180, cx,cy);
-		drawRingedCircle(15,cx-5,cy-22, 2, 0.5f, 8);
-		
-		glColor3f(1,1,1);
-		rotate(45,cx-14,cy-25);
-		drawRect(cx-14,cy-25,28,5);
-		glLoadIdentity();
-		drawRect(cx-7,cy,25,5);
-		
-		
-		//Zero
-		
-		drawEllipse(cx+37,cy+17, 13.5f, 19.0f);
-		glColor3f(this->BG_R,this->BG_G,this->BG_B);
-		drawEllipse(cx+37,cy+17, 7.5f, 14.0f);
-		
+	
 	glPopMatrix();
 	glLoadIdentity();
+	delete number;
 }
 void BottomBar::draw(){
 	drawBottomBar();
-	drawSpeedText();
+	//drawSpeedText(number);
 }

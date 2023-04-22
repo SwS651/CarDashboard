@@ -11,36 +11,26 @@ void Gps::setPosition(GLint px,GLint py){
 	this->cx = px;
 	this->cy = py;
 }
-
-
-void Gps::drawGPS(){
-	//GPS
+void Gps::drawCrossRoad(GLfloat yVel){
 	GLfloat cx = this->cx;
-	GLfloat cy = this->cy;
+	GLfloat cy = this->cy + yVel;
 	
+	//Horizontal road + Vertical road
 	glPushMatrix();
 		glColor3f(0.8157f,0.8078f,0.8078f);
-		drawRect(cx-60,cy-100,9,200);
-	glPopMatrix();
-	glLoadIdentity();
-
-	//Horizontal road
-	glPushMatrix();
-		glColor3f(0.8157f,0.8078f,0.8078f);
+//		glColor3f(1,0,0);
 		drawRect(cx-60,cy+20,160,9);
-		
+		drawRect(cx,cy,9,52);
 	glPopMatrix();
 	glLoadIdentity();
 	
 	glPushMatrix();
-		////
+
 		glColor3f(0.8157f,0.8078f,0.8078f);
 		rotate(50, cx,cy);
 		drawRect(cx,cy,6,35);
 		glLoadIdentity();
-	glPopMatrix();
-	
-	glPushMatrix();
+
 		glColor3f(0.8157f,0.8078f,0.8078f);
 		rotate(-50, cx+5,cy+5);
 		drawRect(cx+5,cy+5,6,35);
@@ -56,17 +46,45 @@ void Gps::drawGPS(){
 		drawRect(cx-23,cy+30,6,35);
 		glLoadIdentity();
 	glPopMatrix();
+}
+
+void Gps::drawGPS(){
+	//GPS
+	GLfloat cx = this->cx;
+	GLfloat cy = this->cy;
 	
+	//Left side straight road
 	glPushMatrix();
-		//Center road
+		glColor3f(0.8157f,0.8078f,0.8078f);
+		drawRect(cx-60,cy-100,9,200);
+	glPopMatrix();
+	glLoadIdentity();
+
+	
+	//Center straight road
+	glPushMatrix();
+		
 		glColor3f(0.8157f,0.8078f,0.8078f);
 		drawRect(cx,cy-100,10,200);
 		glLoadIdentity();
+	glPopMatrix();	
 		
-		
+	
+	
+}
+//x 600 y 160
+void Gps::drawNavigation(GLfloat navline){
+	glPushMatrix();
 		//center road cyan
 		glColor3f(0.5608f, 0.9294f, 0.9373f);
-		drawRect(cx-1,(cy-80)+20,12,160);
+		drawRect(cx-1,(cy-80)+20,12,navline);  //160
+		glLoadIdentity();
+		
+		//glColor3f(1,1,0);
+		//drawRect(cx,(cy-80)+20,10,navline);//220 
+		
+		glColor3f(1,0,0);				
+		drawPoint(cx,cy+155,10);
 		glLoadIdentity();
 	glPopMatrix();
 	
@@ -92,14 +110,7 @@ void Gps::drawGPS(){
 		glColor3f(1,1,1);
 		drawRect(cx+59,(cy-10)-40,12,30);
 		glLoadIdentity();
-		
-		
-	//////glColor3f(1.0f, 1.0f, 1.0f);
-		//text = "7 KM";
-		//drawText("7 KM", text.size(), cx+45,cy-75, GLUT_BITMAP_HELVETICA_18,3.0f);
-		//glLoadIdentity();
 	glPopMatrix();
-	
 }
 void Gps::draw(){
 	drawGPS();

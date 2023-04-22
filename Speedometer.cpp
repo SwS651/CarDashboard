@@ -17,27 +17,7 @@ void Speedometer::outerCircle(){
 	GLfloat cx = this->cx;
 	GLfloat cy = this->cy;
 	glPushMatrix(); 
-	
-		/*Here is old speedometer and progress bar*/
-		
-		//left Circle progress bar
-		//background of circle
-		////glColor3f(0.894f, 0.894f, 0.894f); //color: grey white
-////		drawSolidCircle(130,cx,cy,1);
-////		glLoadIdentity();
-////		
-////		//rotate(pointerAng,cx,cy);
-////		//progress bar and middle area of circle	
-////		setBorderColor(this->BG_R,this->BG_G,this->BG_B);
-////		setFilledColor(0.5608f, 0.9294f, 0.9373f);
-////		setUnfilledColor(this->BG_R,this->BG_G,this->BG_B);
-////		rotate(250, cx,cy); //+ decrease, - increase  //ori = 250, change -90
-////		drawRingedCircle(135,cx,cy, 2, 0.5f, 115);
-////		glLoadIdentity();
-////		
-////		
-
-		
+			
 		glColor3f(0.5608f, 0.9294f, 0.9373f);
 		drawSolidCircle(137,cx,cy,0.0f);
 		glLoadIdentity();
@@ -48,11 +28,31 @@ void Speedometer::outerCircle(){
 		
 		
 		/* This is progress bar, 
+			Speed		  degree
+			
 		   full speed	= 90.0f ( full Cyan color),
-		   120kmh 		= 201,
-		   0kmh 		= 360 359 (full grey color )
+		   	220 kmh		= 84
+		   	215 kmh		= 90.25
+		   	210 kmh		= 96.5
+		   	205 kmh		= 102.75
+		   	200 kmh		= 109
+		   	180 kmh		= 134
+		   	160 kmh		= 159
+		   	140 kmh		= 184
+		   	120 kmh		= 209
+		   	100 kmh		= 234
+		   	80 kmh		= 259
+		   	60 kmh		= 284
+		   	40kmh		= 309		(20kmh - 25)
+			30 kmh		= 321.5,	(20kmh - 12.5)
+			20 kmh		= 334		(360-25)
+		   	10 kmh		= 346.5		(360-12.5)
+		   0kmh 		= 360 359 358 (full grey color )
+		   
+		   (25)
 		*/
-		drawSector(135,cx,cy, 0.0f, this->circlePrgs);   
+		drawSector(135,cx,cy, 0.0f, this->circlePrgs); 
+		//drawSector(135,cx,cy, 0.0f, 90.25);  
 		glLoadIdentity();
 		
 		glColor3f(this->BG_R,this->BG_G,this->BG_B);
@@ -158,17 +158,6 @@ void Speedometer::circlePoint(){
 		drawSolidCircle(12,cx-85,cy-95,1); //->
 		glLoadIdentity();
 		
-		
-		////Pointer: transparent circle and filled circle
-//		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-//		glEnable(GL_BLEND);
-//		glColor4f(0.4f,1.0f,1.0f,0.53f);
-//		drawSolidCircle(22,cx+40,cy+116,1);  //->
-//		glLoadIdentity();
-//		
-//		glColor3f(1.0f,1.0f,1.0f);
-//		drawSolidCircle(12,cx+40,cy+116,1); //->
-//		glLoadIdentity();
 	glPopMatrix();
 
 }

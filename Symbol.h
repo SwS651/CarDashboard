@@ -13,7 +13,8 @@ class Symbol : public Object{
 		void drawCoolantSymbol(GLfloat px,GLfloat py);
 		void drawEngineAlert(GLfloat px,GLfloat py);
 		void drawOilPresureAlert(GLfloat px,GLfloat py);
-		void drawSignals(GLfloat px, GLfloat py);
+		void drawLeftSignal(GLfloat px, GLfloat py);
+		void drawRightSignal(GLfloat px, GLfloat py);
 		
 		GLfloat THEME_R,THEME_G,THEME_B;
 		void setTheme(GLfloat r,GLfloat g,GLfloat b);
